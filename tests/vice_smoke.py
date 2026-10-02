@@ -32,8 +32,17 @@ for standard in ('pal', 'ntsc'):
     if standard == 'ntsc':
         commands += ['keybuf "n"', f"until ${symbols['set_standard']:04x}",
                      f"until ${symbols['poll']:04x}"]
+    # Allow TED to render the complete screen before taking the screenshot.
+    commands += [f"break ${symbols['sfx_tick']:04x}", 'ignore 1 2', 'x', 'delete 1']
     commands += ['screen', f'bsave "{prefix}-screen.bin" 0 $0c00 $0fe7',
                  f'screenshot "{prefix}-screen.png" 2']
+    for page, key in ((2, r"\x1d"), (3, r"\x1d"), (1, r"\x9d\x9d")):
+        commands += [f'keybuf "{key}"', f"until ${symbols['menu_draw']:04x}",
+                     f"until ${symbols['poll']:04x}"]
+        if page == 1:
+            commands += [f"until ${symbols['menu_draw']:04x}",
+                         f"until ${symbols['poll']:04x}"]
+        commands += [f'bsave "{prefix}-page{page}.bin" 0 $0c00 $0fe7']
     # All catalog IDs are entered through the actual demo's numeric input.
     for effect in range(50):
         key = f'{effect:02d}'
@@ -43,7 +52,7 @@ for standard in ('pal', 'ntsc'):
         commands += [f'keybuf "{key}\\x0d"', f"until ${symbols['sfx_play']:04x}",
                      f"until ${symbols['poll']:04x}",
                      f'bsave "{prefix}-{key}-playing.bin" 0 $ff0e $ff12',
-                     f'bsave "{prefix}-{key}-input.bin" 0 $0ca4 $0ca5',
+                     f'bsave "{prefix}-{key}-input.bin" 0 $0f4c $0f4d',
                      f"break ${symbols['sfx_tick']:04x}", f'ignore 1 ${frames:02x}', 'x',
                      'delete 1',
                      f'bsave "{prefix}-{key}-ended.bin" 0 $ff0e $ff12']
@@ -86,6 +95,11 @@ for standard in ('pal', 'ntsc'):
     screen = Path(f'{prefix}-screen.bin').read_bytes()
     decoded = ''.join(chr(b + 64) if b < 32 else chr(b) for b in screen)
     assert '50 SOUND EFFECTS' in decoded
+    for page, first in ((1, '00 JINGLE-WIN'), (2, '20 STEP-STONE'), (3, '40 TELEPORT')):
+        data = Path(f'{prefix}-page{page}.bin').read_bytes()
+        content = ''.join(chr(b + 64) if b < 32 else chr(b) for b in data)
+        assert first in content, (standard, page, content)
+        assert data[36] == ord(str(page))
     assert 'ERROR' not in text and 'not a valid checkpoint' not in text
     for effect in range(50):
         key = f'{effect:02d}'

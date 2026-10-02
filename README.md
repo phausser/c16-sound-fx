@@ -1,14 +1,14 @@
 # C16 Sound FX
 
-Geplant ist eine ACME-Assembler-Demo mit 50 benannten Soundeffekten für den Commodore 16. Eine Auswahlliste macht kurze Tonfolgen, Rauscheffekte, kombinierte Geräusche und wiederholbare Effekte direkt spielbar. Die Soundengine soll sich unabhängig vom Menü in Spiele einbauen lassen.
+Dieses Projekt entwickelt eine ACME-Assembler-Demo mit 50 benannten Soundeffekten für den Commodore 16. Eine Auswahlliste macht kurze Tonfolgen, Rauscheffekte, kombinierte Geräusche und wiederholbare Effekte direkt spielbar. Die Soundengine ist unabhängig vom Menü nutzbar.
 
 Der C16 erzeugt seinen Sound mit dem TED: zwei Rechteck-Tonkanäle und ein Rauschgenerator, der die Frequenzsteuerung mit dem zweiten Tonkanal teilt. Ziel ist ein unveränderter C16 mit 16 KB RAM, zunächst PAL; NTSC ist ebenfalls vorgesehen.
 
 ## Aktueller Stand
 
-Build, nicht blockierende Soundengine und alle 50 Effektdaten sind implementiert. Die Katalogdemo startet jeden Effekt über seine stabile ID 00–49. Acht Effekte haben gestaltete Loops; `fire-crackle` verwendet reproduzierbare Knistervariation. Das vollständige Auswahlmenü folgt in Schritt 4. CPU-Tests und VICE-Prüfungen auf PAL/NTSC mit 16 KB RAM bestehen; die Startanzeige ist visuell geprüft. Klangabstimmung und Hardwareprüfung bleiben offen.
+Build, nicht blockierende Soundengine und alle 50 Effektdaten sind implementiert. Die Katalogdemo startet jeden Effekt über seine stabile ID 00–49. Acht Effekte haben gestaltete Loops; `fire-crackle` verwendet reproduzierbare Knistervariation. Das Auswahlmenü zeigt drei Seiten mit 20/20/10 Einträgen, Auswahlmarkierung, Wiedergabe- und Loopstatus. Cursortasten navigieren; RETURN/SPACE startet die Auswahl. Aktionsentprellung und kontrollierte Tastenwiederholung bleiben geplant. CPU-Tests und VICE-Prüfungen auf PAL/NTSC mit 16 KB RAM bestehen; die Startanzeige ist visuell geprüft. Klangabstimmung und Hardwareprüfung bleiben offen.
 
-Die Demo belegt 4676 Bytes; die Engine samt vollständigem Katalog 4269 Bytes, ohne Zero Page. Der höchste getestete Tick benötigt 332 CPU-Zyklen. API und Messgrenzen: [docs/engine.md](docs/engine.md). Katalog und Prüfungen: [docs/effects.md](docs/effects.md). Hardwaregrundlage: [docs/hardware.md](docs/hardware.md).
+Die Demo belegt 5057 Bytes; die Engine samt vollständigem Katalog 4269 Bytes, ohne Zero Page. Der höchste getestete Tick benötigt 332 CPU-Zyklen. API und Messgrenzen: [docs/engine.md](docs/engine.md). Katalog und Prüfungen: [docs/effects.md](docs/effects.md). Hardwaregrundlage: [docs/hardware.md](docs/hardware.md).
 
 - [SPEC.md](SPEC.md): Anforderungen, vollständiger Katalog der 50 Effekte, API und Abnahme.
 - [TOOD.md](TOOD.md): Umsetzungsschritte und Prüfungen.
@@ -37,13 +37,15 @@ make run ACME=/pfad/zu/acme VICE=/pfad/zu/xplus4
 
 | Taste | Aktion |
 |---|---|
+| Cursor hoch/runter, links/rechts | Auswahl, Seite wechseln |
+| RETURN oder SPACE | Auswahl starten/neustarten |
 | 00–49, dann RETURN oder SPACE | Effekt per ID starten/neustarten |
 | L | Wiederholung umschalten |
 | S | Wiedergabe und Wiederholung stoppen |
 | Q | Ressourcen freigeben und nach BASIC zurückkehren |
 | P / N | PAL / NTSC wählen; muss zum Emulator passen, stoppt Wiedergabe |
 
-Die Demo startet mit ID 00, PAL und Wiederholung aus. Beispielsweise startet `24` und RETURN den Effekt `vogelflug`. Ein oder zwei Ziffern werden angenommen; eine dritte Ziffer beginnt eine neue Eingabe. Ungültige IDs 50–99 lassen die Wiedergabe unverändert. Für NTSC: `make run VICE_STANDARD=ntsc`, anschließend N drücken. Ein anderer Audiotreiber ist über `VICE_SOUND_DEVICE` wählbar. Aktionsentprellung folgt mit dem Menü.
+Die Demo startet mit ID 00, PAL und Wiederholung aus. Beispielsweise startet `24` und RETURN den Effekt `vogelflug`. Ein oder zwei Ziffern werden angenommen; eine dritte Ziffer beginnt eine neue Eingabe. Ungültige IDs 50–99 lassen die Wiedergabe unverändert. Für NTSC: `make run VICE_STANDARD=ntsc`, anschließend N drücken. Ein anderer Audiotreiber ist über `VICE_SOUND_DEVICE` wählbar. Aktionsentprellung ist noch offen.
 
 ## Automatisierte Prüfung
 
@@ -59,7 +61,7 @@ make record-vice
 
 `make test-vice` verwendet den Dummy-Audiotreiber; es prüft alle 50 Starts und natürlichen Enden, acht Loops mit Stop, ID-Eingabe, Bildschirmdaten und die Rückkehr nach BASIC. `make record-vice` führt denselben Test mit CoreAudio und WAV-Aufnahme ohne Warp durch; die Klangbeurteilung erfolgt separat.
 
-## Geplante Bedienung
+## Auswahlmenü bedienen
 
 | Taste | Aktion |
 |---|---|

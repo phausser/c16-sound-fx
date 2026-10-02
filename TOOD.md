@@ -45,13 +45,15 @@ Alle 50 Abläufe sind technisch auf PAL/NTSC mit 16 KB RAM geprüft. Die subjekt
 
 ## 4. Auswahldemo
 
-- [ ] 40×25-Anzeige mit Seiten zu 20/20/10 Einträgen aufbauen.
-- [ ] Auswahlmarkierung, Status, Wiederholung und Tastenhilfe darstellen.
+- [x] 40×25-Anzeige mit Seiten zu 20/20/10 Einträgen aufbauen.
+- [x] Auswahlmarkierung, Status, Wiederholung und Tastenhilfe darstellen.
 - [ ] Navigation und kontrollierte Tastenwiederholung implementieren.
 - [ ] RETURN/SPACE, L, S/RUN-STOP und Q implementieren.
 - [ ] Frame-Takt anbinden, ohne Soundengine mit Menü oder KERNAL zu koppeln.
 - [ ] Seitenwechsel und Auswahl während laufender Effekte prüfen.
 - [ ] Sauberen Exit nach BASIC samt Ressourcenfreigabe prüfen.
+
+Menü-Zwischenstand: drei Katalogseiten und Statusanzeige implementiert. VICE PAL/NTSC mit 16 KB prüft Seitenwechsel, 50 Starts/Enden, acht Loops/Stops und Q-Rückkehr. Startseite visuell geprüft. Aktionsentprellung, kontrollierte Navigationstastenwiederholung und gezielte Navigation während laufender Wiedergabe bleiben offen.
 
 ## 5. Abnahme und Übergabe
 

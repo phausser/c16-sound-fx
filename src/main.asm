@@ -27,12 +27,16 @@ poll:
     bne .keys
     inc frame_seen
     jsr sfx_tick
+    jsr menu_status
     jmp .keys
 .low:
     lda #0
     sta frame_seen
 .keys:
     jsr KERNAL_GETIN           ; IRQ keyboard scan stays enabled
+    jsr menu_key
+    cmp #0
+    beq ignore_key
     cmp #'Q'
     bne +
     jmp exit
@@ -68,11 +72,11 @@ second_digit:
     lda input_id
     clc
     adc #'0'
-    sta SCREEN_BASE+4*40+4 ; two screen-code digits in the ID field
+    sta SCREEN_BASE+21*40+4 ; two screen-code digits in the ID field
     lda input_digit
     clc
     adc #'0'
-    sta SCREEN_BASE+4*40+5
+    sta SCREEN_BASE+21*40+5
     lda input_id
     asl
     sta input_tens
@@ -86,6 +90,11 @@ second_digit:
 ignore_key:
     jmp poll
 play_input:
+    lda input_digits
+    bne +
+    lda menu_selected
+    sta input_id
++
     lda input_id            ; IDs 50..99 rejected without interrupting playback
     jsr sfx_play
     lda #0
