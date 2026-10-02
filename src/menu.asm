@@ -6,7 +6,7 @@ menu_init:
     sta KERNAL_REPEAT
     lda #$93
     jsr KERNAL_CHROUT
-    lda #0
+    lda #TED_BG_COLOR
     sta TED_BACKGROUND
     sta TED_BORDER
     lda #TED_WHITE
@@ -151,10 +151,10 @@ menu_navigate:
 menu_page_index:
     ldx #0
     lda menu_selected
-    cmp #20
+    cmp #24
     bcc +
     inx
-    cmp #40
+    cmp #48
     bcc +
     inx
 +
@@ -186,8 +186,8 @@ menu_draw:
     clc
     adc #'1'
     ora #$80
-    sta SCREEN_BASE+36
-    lda #20
+    sta SCREEN_BASE+37
+    lda #24
     sta menu_rows
 .row:
     lda #' '
@@ -206,29 +206,8 @@ menu_draw:
     jsr menu_number
     lda #' '
     jsr menu_put
-    lda menu_effect_id
-    asl
-    tax
-    lda sfx_names,x
-    sta menu_load+1
-    lda sfx_names+1,x
-    sta menu_load+2
     lda #4
     sta menu_column
-    ldy #0
-.name:
-menu_load:
-    lda $ffff,y
-    beq .category
-    and #$3f                 ; catalog PETSCII uppercase -> screen codes
-    jsr menu_put
-    inc menu_column
-    iny
-    bne .name
-.category:
-    lda #' '
-    jsr menu_put
-    inc menu_column
     ldx menu_item
     lda menu_categories,x
     asl
@@ -241,11 +220,39 @@ menu_load:
 .category_text:
 menu_category_load:
     lda $ffff,y
-    beq .pad
+    beq .category_pad
     jsr menu_put
     inc menu_column
     iny
     bne .category_text
+.category_pad:
+    lda menu_column
+    cmp #20
+    beq .name_setup
+    lda #' '
+    jsr menu_put
+    inc menu_column
+    lda menu_column
+    cmp #20
+    bne .category_pad
+.name_setup:
+    lda menu_effect_id
+    asl
+    tax
+    lda sfx_names,x
+    sta menu_load+1
+    lda sfx_names+1,x
+    sta menu_load+2
+    ldy #0
+.name:
+menu_load:
+    lda $ffff,y
+    beq .pad
+    and #$3f                 ; catalog PETSCII uppercase -> screen codes
+    jsr menu_put
+    inc menu_column
+    iny
+    bne .name
 .blank:
     lda #1
     sta menu_column
@@ -261,13 +268,6 @@ menu_category_load:
     beq +
     jmp .row
 +
-    ldx #0
-.footer:
-    lda menu_footer,x
-    jsr menu_put
-    inx
-    cpx #160
-    bne .footer
     jmp menu_status
 
 menu_number:
@@ -298,42 +298,33 @@ menu_store:
     rts
 
 menu_status:
-    lda #<(SCREEN_BASE+21*40+4)
-    sta menu_store+1
-    lda #>(SCREEN_BASE+21*40+4)
-    sta menu_store+2
-    lda input_digits
-    bne +
-    ldx menu_selected
-    lda menu_order,x
-    jsr menu_number
-+
-    lda sfx_active
-    clc
-    adc #'0'
-    sta SCREEN_BASE+21*40+15
+    ldx #0
     lda sfx_loop
-    clc
-    adc #'0'
-    sta SCREEN_BASE+21*40+23
+    beq +
+    ldx #3
++
+    ldy #0
+menu_loop_text:
+    lda menu_loop_status,x
+    ora #$80
+    sta SCREEN_BASE+21,y
+    inx
+    iny
+    cpy #3
+    bne menu_loop_text
     rts
+menu_loop_status: !scr "offon "
 menu_selected: !byte 0
 menu_item: !byte 0
 menu_rows: !byte 0
 menu_column: !byte 0
 menu_header:
-    !scr "c16 sound fx - 50 sound effects     1/3 "
-menu_footer:
-    !scr "id: 00 playing: 0 loop: 0               "
-    !scr "                                        "
-    !scr "                                        "
-    !scr "h: help                                 "
-!if * - menu_footer != 160 { !error "Footer must fill four rows" }
+    !scr "c=16 sound fx  loop: off  (h)elp     1/3"
 menu_help: !byte 0
-menu_page_end: !byte 20
+menu_page_end: !byte 24
 menu_effect_id: !byte 0
-menu_page_starts: !byte 0,20,40
-menu_page_ends: !byte 20,40,50
+menu_page_starts: !byte 0,24,48
+menu_page_ends: !byte 24,48,50
 
 menu_draw_help:
     lda #<SCREEN_BASE
@@ -367,7 +358,7 @@ menu_help_load:
     bne menu_help_copy
     jmp menu_status
 menu_help_text:
-    !scr "c16 sound fx - help                     "
+    !scr "c=16 sound fx  loop: off  (h)elp     hlp"
     !scr "                                        "
     !scr "cursor up/down: select effect           "
     !scr "cursor left/right: change page          "
@@ -388,7 +379,7 @@ menu_help_text:
     !scr "navigation does not change playing fx   "
     !scr "                                        "
     !scr "                                        "
-    !scr "id: 00 playing: 0 loop: 0               "
+    !scr "                                        "
     !scr "                                        "
     !scr "                                        "
     !scr "                                        "

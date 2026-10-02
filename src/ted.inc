@@ -13,7 +13,8 @@ TED_RELOAD = $80
 
 TED_BACKGROUND = $ff15
 TED_BORDER = $ff19
-TED_WHITE = $71                 ; luminance 7, color 1, no blink
+TED_BG_COLOR = (3 << 4) + 6
+TED_WHITE = (7 << 4) + 1                 ; luminance 7, color 1, no blink
 
 KERNAL_CHROUT = $ffd2
 KERNAL_GETIN = $ffe4

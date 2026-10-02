@@ -17,9 +17,9 @@ Relevante Register: `$FF0E` (Ton 1, Frequenz unten), `$FF0F` (Ton 2/Rauschen, Fr
 ## Bedienung und Anzeige
 
 - 40 × 25 Zeichen, PETSCII-kompatible Namen ohne Umlaute.
-- Drei Seiten: 20, 20 und 10 Einträge; ein Eintrag pro Zeile mit ID und Name.
-- Inverse Kopfzeile mit Titel und Seite; Fußzeilen mit ausgewählter ID, Wiedergabestatus, Wiederholungsstatus und Hinweis auf H. Schwarzer Hintergrund und Rahmen, weiße Schrift.
-- Anzeige nach zusammenhängenden Kategorien sortieren; hinter jedem Namen `(KATEGORIE)` zeigen. Kategorien dürfen über Seitenwechsel weiterlaufen. Sortierung verändert die stabilen IDs nicht.
+- Drei Seiten: 24, 24 und 2 Einträge; ein Eintrag pro Zeile mit ID und Name.
+- Inverse Kopfzeile mit `C=16 Sound FX`, Loopstatus `ON/OFF` vor `(H)elp` und rechts Seite `1/3` bis `3/3`; alle 24 Zeilen darunter sind Listeneinträgen vorbehalten, ohne Status- oder Fußzeile. Schwarzer Hintergrund und Rahmen, weiße Schrift.
+- Anzeige nach zusammenhängenden Kategorien sortieren; vor jedem Namen `(KATEGORIE)` zeigen. Kategorien dürfen über Seitenwechsel weiterlaufen. Sortierung verändert die stabilen IDs nicht.
 - Separate Hilfeseite mit allen Tastaturbefehlen: H öffnet/schließt sie; RETURN/SPACE kehrt zum Katalog zurück. Auswahl und laufende Wiedergabe bleiben erhalten. Navigation und ID-Eingabe sind auf der Hilfeseite gesperrt; Loop, Stop, Videostandardwechsel und Exit bleiben verfügbar.
 - Cursor hoch/runter: Auswahl; links/rechts: Seite. Auswahlgrenzen werden begrenzt, kein unbeabsichtigtes Umspringen.
 - RETURN oder SPACE: ausgewählten Effekt starten beziehungsweise von vorn starten.

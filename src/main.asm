@@ -87,14 +87,6 @@ poll:
     sta input_digits
 second_digit:
     lda input_id
-    clc
-    adc #'0'
-    sta SCREEN_BASE+21*40+4 ; two screen-code digits in the ID field
-    lda input_digit
-    clc
-    adc #'0'
-    sta SCREEN_BASE+21*40+5
-    lda input_id
     asl
     sta input_tens
     asl

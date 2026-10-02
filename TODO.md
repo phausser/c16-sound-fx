@@ -45,7 +45,7 @@ Alle 50 Abläufe sind technisch auf PAL/NTSC mit 16 KB RAM geprüft. Die subjekt
 
 ## 4. Auswahldemo
 
-- [x] 40×25-Anzeige mit Seiten zu 20/20/10 Einträgen aufbauen.
+- [x] 40×25-Anzeige mit Seiten zu 24/24/2 Einträgen aufbauen.
 - [x] Auswahlmarkierung, Status, Wiederholung und Tastenhilfe darstellen.
 - [x] Navigation und kontrollierte Tastenwiederholung implementieren.
 - [x] RETURN/SPACE, L, S/RUN-STOP und Q implementieren.
@@ -79,7 +79,9 @@ Darstellung: schwarzer Hintergrund und Rahmen, weiße Schrift (TED-Attribut `$71
 
 ### Kategorieansicht und Hilfe
 
-- [x] Alle 50 Effekte nach Kategorie zusammenhängend anzeigen, Namen mit `(KATEGORIE)` ergänzen; IDs beibehalten.
+- [x] Alle 50 Effekte nach Kategorie zusammenhängend anzeigen, `(KATEGORIE)` vor Namen anzeigen; IDs beibehalten.
 - [x] Inverse Kopfzeile auf schwarzem Hintergrund mit weißer Schrift.
 - [x] Tastaturbefehle auf separate H-Hilfeseite verschieben; Rückkehr erhält Auswahl und laufenden Effekt.
 - [x] CPU-Tests für alle 50 ausgewählten Starts, Kategorienreihenfolge und Hilfe ergänzen; VICE PAL/NTSC mit 16 KB prüfen.
+
+Titelleiste: `C=16 Sound FX`, `Loop: ON/OFF`, `(H)elp`, Seite rechts. Keine Status- oder Fußzeile; alle 24 Zeilen unter der Titelleiste werden für Einträge genutzt (24/24/2).

@@ -63,7 +63,8 @@ for standard in ('pal', 'ntsc'):
         commands += [f'keybuf "{key}\\x0d"', f"until ${symbols['sfx_play']:04x}",
                      f"until ${symbols['poll']:04x}",
                      f'bsave "{prefix}-{key}-playing.bin" 0 $ff0e $ff12',
-                     f'bsave "{prefix}-{key}-input.bin" 0 $0f4c $0f4d',
+                     f'bsave "{prefix}-{key}-input.bin" 0 '
+                     f"${symbols['input_id']:04x} ${symbols['input_id']:04x}",
                      f"break ${symbols['sfx_tick']:04x}", f'ignore 1 ${frames:02x}', 'x',
                      'delete 1',
                      f'bsave "{prefix}-{key}-ended.bin" 0 $ff0e $ff12']
@@ -116,10 +117,15 @@ for standard in ('pal', 'ntsc'):
     text = log.read_text(encoding="latin-1")
     assert Path(f'{prefix}-attributes.bin').read_bytes() == bytes([0x71]) * 1000
     colors = Path(f'{prefix}-colors.bin').read_bytes()
-    assert colors[0] & 0x7f == 0 and colors[4] & 0x7f == 0
+    expected_background = symbols.get("TED_BG_COLOR", 0) & 0x7f
+    assert colors[0] & 0x7f == expected_background
+    assert colors[4] & 0x7f == expected_background
     screen = Path(f'{prefix}-screen.bin').read_bytes()
     decoded = ''.join(chr((b & 0x7f) + 64) if (b & 0x7f) < 32 else chr(b & 0x7f) for b in screen)
-    assert '50 SOUND EFFECTS' in decoded
+    assert 'C=16 SOUND FX' in decoded
+    assert 'LOOP: OFF' in decoded[:40] and '(H)ELP' in decoded[:40]
+    assert 'STATUS:' not in decoded
+    assert '19 (BEWEGUNG)' in decoded[24 * 40:25 * 40]
     assert all(b & 0x80 for b in screen[:40])
     assert '(JINGLE)' in decoded and '(SAMMELN)' in decoded
     assert 'CURSOR: SELECT/PAGE' not in decoded
@@ -128,11 +134,11 @@ for standard in ('pal', 'ntsc'):
                         else chr(b & 0x7f) for b in help_data)
     assert 'CURSOR UP/DOWN' in help_text and 'RUN-STOP' in help_text
     assert all(b & 0x80 for b in help_data[:40])
-    for page, first in ((1, '00 JINGLE-WIN'), (2, '16 DOUBLE-JUMP'), (3, '27 MACHINE-GUN')):
+    for page, first in ((1, '00 (JINGLE)'), (2, '20 (BEWEGUNG)'), (3, '35 (KAMPF)')):
         data = Path(f'{prefix}-page{page}.bin').read_bytes()
         content = ''.join(chr((b & 0x7f) + 64) if (b & 0x7f) < 32 else chr(b & 0x7f) for b in data)
         assert first in content, (standard, page, content)
-        assert data[36] == ord(str(page)) | 0x80
+        assert data[37] == ord(str(page)) | 0x80
     assert 'ERROR' not in text and 'not a valid checkpoint' not in text
     for effect in range(50):
         key = f'{effect:02d}'
@@ -140,7 +146,7 @@ for standard in ('pal', 'ntsc'):
         ended = Path(f'{prefix}-{key}-ended.bin').read_bytes()
         assert playing[3] != 0 and ended[3] == 0, (standard, key)
         assert playing[4] & 0xfc == ended[4] & 0xfc, (standard, key)
-        assert Path(f'{prefix}-{key}-input.bin').read_bytes() == key.encode('ascii')
+        assert Path(f'{prefix}-{key}-input.bin').read_bytes() == bytes([effect])
     for effect in (22, 23, 24, 27, 41, 43, 47, 48):
         state = Path(f'{prefix}-{effect:02d}-loop.bin').read_bytes()
         assert state[0] == 1 and state[1] == 1 and state[3] == 0

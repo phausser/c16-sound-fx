@@ -39,6 +39,10 @@ for ntsc, delay, interval in ((0, 25, 5), (1, 30, 6)):
     def screen_text():
         return ''.join(chr((b & 0x7f) + 64) if (b & 0x7f) < 32
                        else chr(b & 0x7f) for b in cpu.memory[0x0c00:0x0fe8])
+    assert 'C=16 SOUND FX' in screen_text()[:40]
+    assert '(H)ELP' in screen_text()[:40]
+    assert 'LOOP: OFF' in screen_text()[:40]
+    assert 'STATUS:' not in screen_text()
     call('sfx_init', ntsc)
     for position, effect in enumerate(order):
         cpu.memory[symbols['menu_selected']] = position
@@ -49,7 +53,12 @@ for ntsc, delay, interval in ((0, 25, 5), (1, 30, 6)):
         while cpu.memory[name_address]:
             name += chr(cpu.memory[name_address])
             name_address += 1
-        assert f'>{effect:02d} {name} (' in screen_text()
+        assert f'>{effect:02d} (' in screen_text()
+        row = 1 + position % 24
+        line = screen_text()[row * 40:(row + 1) * 40]
+        assert line[20:20 + len(name)] == name
+        assert line[19] == ' '
+        assert line.startswith(f'>{effect:02d} (')
         call('sfx_play', effect)
         expected_start = cpu.memory[symbols['sfx_start']:symbols['sfx_start'] + 2]
         call('sfx_stop')
@@ -67,6 +76,9 @@ for ntsc, delay, interval in ((0, 25, 5), (1, 30, 6)):
     call('sfx_init', ntsc)
     call('sfx_set_loop', 1)
     call('sfx_play', 43)
+    call('menu_status')
+    assert 'LOOP: ON ' in screen_text()[:40]
+    assert 'STATUS:' not in screen_text()
     sound = cpu.memory[0xff0e:0xff13]
     call('menu_key', ord('H'))
     assert state('menu_help') == 1 and 'CURSOR UP/DOWN' in screen_text()
