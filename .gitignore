@@ -1,0 +1,15 @@
+# Generierte PRGs, Listings, Symbole und weitere Build-Ausgaben
+/build/
+
+# Lokale Emulator-Sitzungen und Laufzeitprotokolle
+*.vsf
+*.log
+
+# Editor- und Betriebssystemdateien
+.DS_Store
+._*
+*~
+*.swp
+*.swo
+.idea/
+.vscode/
