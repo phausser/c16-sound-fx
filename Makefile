@@ -7,7 +7,7 @@ PRG := build/c16-sound-fx.prg
 EXAMPLE := build/game-integration.prg
 SOURCES := $(wildcard src/*.asm src/*.inc)
 
-.PHONY: all run test test-vice record-vice clean example run-example test-example-vice record-inspired
+.PHONY: all run test test-vice record-vice clean example run-example test-example-vice record-inspired record-flaps record-life
 all: $(PRG)
 
 $(PRG): $(SOURCES) Makefile | build
@@ -43,5 +43,11 @@ record-vice: $(PRG)
 record-inspired: $(PRG)
 	$(PYTHON) tests/record_inspired.py $(VICE) $(VICE_SOUND_DEVICE)
 
+record-flaps: $(PRG)
+	$(PYTHON) tests/record_inspired.py $(VICE) $(VICE_SOUND_DEVICE) --first 70 --last 74 --cycles 4
+
 clean:
 	$(RM) -r build
+
+record-life: $(PRG)
+	$(PYTHON) tests/record_inspired.py $(VICE) $(VICE_SOUND_DEVICE) --first 75 --last 79

@@ -42,13 +42,12 @@ for standard in ('pal', 'ntsc'):
                  f'bsave "{prefix}-colors.bin" 0 $ff15 $ff19']
     commands += ['screen', f'bsave "{prefix}-screen.bin" 0 $0c00 $0fe7',
                  f'screenshot "{prefix}-screen.png" 2']
-    for page, key in ((2, r"\x1d"), (3, r"\x1d"), (1, r"\x9d\x9d")):
+    # Visit all category pages and return to the first without wrapping.
+    for page, key in ([(p, r"\x1d") for p in range(2, symbols['SFX_PAGE_COUNT'] + 1)] +
+                      [(p, r"\x9d") for p in range(symbols['SFX_PAGE_COUNT'] - 1, 0, -1)]):
         commands += [f'keybuf "{key}"', f"until ${symbols['menu_draw']:04x}",
-                     f"until ${symbols['poll']:04x}"]
-        if page == 1:
-            commands += [f"until ${symbols['menu_draw']:04x}",
-                         f"until ${symbols['poll']:04x}"]
-        commands += [f'bsave "{prefix}-page{page}.bin" 0 $0c00 $0fe7']
+                     f"until ${symbols['poll']:04x}",
+                     f'bsave "{prefix}-page{page}.bin" 0 $0c00 $0fe7']
     commands += ['keybuf "h"', f"until ${symbols['menu_draw']:04x}",
                  f"until ${symbols['poll']:04x}",
                  f"break ${symbols['sfx_tick']:04x}", 'ignore 1 2', 'x', 'delete 1',
@@ -132,7 +131,7 @@ for standard in ('pal', 'ntsc'):
     assert 'C=16 SOUND FX' in decoded
     assert 'LOOP: OFF' in decoded[:40] and '(H)ELP' in decoded[:40]
     assert 'STATUS:' not in decoded
-    assert '45 (SIGNAL)' in decoded[24 * 40:25 * 40]
+    assert f"{prg[2 + symbols['menu_order'] - load + 23]:02d} (" in decoded[24 * 40:25 * 40]
     assert all(b & 0x80 for b in screen[:40])
     assert '(JINGLE)' in decoded and '(SAMMELN)' in decoded
     assert 'CURSOR: SELECT/PAGE' not in decoded
@@ -141,11 +140,16 @@ for standard in ('pal', 'ntsc'):
                         else chr(b & 0x7f) for b in help_data)
     assert 'CURSOR UP/DOWN' in help_text and 'RUN-STOP' in help_text
     assert all(b & 0x80 for b in help_data[:40])
-    for page, first in ((1, '00 (JINGLE)'), (2, '57 (SIGNAL)'), (3, '53 (OBJEKT)')):
+    order_offset = 2 + symbols['menu_order'] - load
+    for page in range(1, symbols['SFX_PAGE_COUNT'] + 1):
         data = Path(f'{prefix}-page{page}.bin').read_bytes()
-        content = ''.join(chr((b & 0x7f) + 64) if (b & 0x7f) < 32 else chr(b & 0x7f) for b in data)
-        assert first in content, (standard, page, content)
+        effect = prg[order_offset + (page - 1) * 24]
+        assert data[40:44] == f'>{effect:02d} '.encode('ascii'), (standard, page)
         assert data[37] == ord(str(page)) | 0x80
+        assert data[39] == ord(str(symbols['SFX_PAGE_COUNT'])) | 0x80
+        if page == symbols['SFX_PAGE_COUNT']:
+            rows = symbols['SFX_COUNT'] - (page - 1) * 24
+            assert data[(rows + 1) * 40:] == b' ' * ((24 - rows) * 40)
     assert 'ERROR' not in text and 'not a valid checkpoint' not in text
     for effect in range(symbols["SFX_COUNT"]):
         key = f'{effect:02d}'
@@ -183,5 +187,6 @@ for standard in ('pal', 'ntsc'):
         with wave.open(str(prefix.with_suffix('.wav'))) as finalized:
             assert finalized.getnframes() == len(pcm) // (channels * 2)
         print(f'WAV: {prefix.with_suffix(".wav")} ({len(pcm) / (channels * 2 * rate):.2f} s)')
-    print(f'VICE {standard.upper()}: 70 effect starts/ends/stops, 10 loops/stops, screen text, '
+    print(f"VICE {standard.upper()}: {symbols['SFX_COUNT']} effect starts/ends/stops, "
+          f'{len(loop_ids)} loops/stops, screen text, '
           f'Q return to BASIC (${final_pc:04X}) passed')

@@ -107,7 +107,7 @@ menu_navigate:
     jmp .redraw
 .right:
     jsr menu_page_index
-    cpx #2
+    cpx #SFX_PAGE_COUNT-1
     beq .done
     lda menu_selected
     sec
@@ -151,12 +151,11 @@ menu_navigate:
 menu_page_index:
     ldx #0
     lda menu_selected
-    cmp #24
+.next_page:
+    cmp menu_page_ends,x
     bcc +
     inx
-    cmp #48
-    bcc +
-    inx
+    bne .next_page
 +
     rts
 
@@ -319,12 +318,17 @@ menu_item: !byte 0
 menu_rows: !byte 0
 menu_column: !byte 0
 menu_header:
-    !scr "c=16 sound fx  loop: off  (h)elp     1/3"
+    !scr "c=16 sound fx  loop: off  (h)elp     1/"
+    !byte '0'+SFX_PAGE_COUNT
 menu_help: !byte 0
 menu_page_end: !byte 24
 menu_effect_id: !byte 0
-menu_page_starts: !byte 0,24,48
-menu_page_ends: !byte 24,48,SFX_COUNT
+menu_page_starts:
+    !for .page, 0, SFX_PAGE_COUNT-1 { !byte .page*24 }
+menu_page_ends:
+    !for .page, 1, SFX_PAGE_COUNT {
+        !if .page*24 > SFX_COUNT { !byte SFX_COUNT } else { !byte .page*24 }
+    }
 
 menu_draw_help:
     lda #<SCREEN_BASE
@@ -364,7 +368,7 @@ menu_help_text:
     !scr "cursor left/right: change page          "
     !scr "                                        "
     !scr "return / space: start or restart        "
-    !scr "00-69 then return: start by api id      "
+    !scr "00-79 then return: start by api id      "
     !scr "                                        "
     !scr "l: toggle loop                          "
     !scr "s / run-stop: stop sound and loop       "
@@ -426,9 +430,9 @@ menu_repeat_delay: !byte 25,30
 menu_repeat_interval: !byte 5,6
 
 menu_order:
-    !byte 0,1,2,3,4,8,9,39,69,5,6,7,51,54,64,67,10,11,12,13,14,43,44,45,57,66,68,15,16,17,18,19,20,21,22,23,24,41,42,62,46,47,48,63,36,37,38,40,53,60,61,25,26,27,30,50,52,56,58,59,65,28,29,31,32,33,34,35,49,55
+    !byte 0,1,2,3,4,8,9,39,69,75,76,77,78,79,5,6,7,51,54,64,67,10,11,12,13,14,43,44,45,57,66,68,15,16,17,18,19,20,21,22,23,24,70,71,72,73,74,41,42,62,46,47,48,63,36,37,38,40,53,60,61,25,26,27,30,50,52,56,58,59,65,28,29,31,32,33,34,35,49,55
 menu_categories:
-    !byte 0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,2,2,2,2,2,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,4,5,5,5,6,6,6,6,7,7,7,7,7,7,7,8,8,8,8,8,8,8,8,8,8,9,9,10,10,10,10,10,10,10
+    !byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,2,2,2,2,2,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,5,5,5,6,6,6,6,7,7,7,7,7,7,7,8,8,8,8,8,8,8,8,8,8,9,9,10,10,10,10,10,10,10
 menu_category_names:
     !word menu_category_0,menu_category_1,menu_category_2,menu_category_3,menu_category_4,menu_category_5,menu_category_6,menu_category_7,menu_category_8,menu_category_9,menu_category_10
 menu_category_0: !scr "(jingle)"

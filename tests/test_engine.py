@@ -287,7 +287,7 @@ first = fire_trace(fire)
 assert first == fire_trace(fire) == fire_trace(Engine())
 assert first[:30] != first[30:]
 assert fire.state('sfx_random') != 0
-print('Catalog checks passed: 70 stable IDs/names, unique streams, all durations and loop seams')
+print(f'Catalog checks passed: {COUNT} stable IDs/names, unique streams, all durations and loop seams')
 
 print(f"Engine checks passed; maximum measured tick: {MAX_TICK} CPU cycles")
 print(f"Code: {SYMBOLS['sfx_code_end'] - SYMBOLS['sfx_init']} bytes; "

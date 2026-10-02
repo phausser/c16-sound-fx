@@ -1,11 +1,20 @@
 """Record game-inspired IDs 50-69 sequentially in real PAL VICE."""
 from pathlib import Path
 from array import array
+import argparse
 import re
 import subprocess
 import sys
 import wave
 
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument('vice', nargs='?', default='xplus4')
+parser.add_argument('sound_device', nargs='?', default='coreaudio')
+parser.add_argument('--first', type=int, default=50)
+parser.add_argument('--last', type=int, default=69)
+parser.add_argument('--cycles', type=int, default=1)
+args = parser.parse_args()
+assert 0 <= args.first <= args.last and args.cycles >= 1
 root = Path(__file__).resolve().parents[1]
 build = root / 'build'
 symbols = {n: int(v, 16) for n, v in re.findall(
@@ -14,24 +23,41 @@ symbols = {n: int(v, 16) for n, v in re.findall(
 prg = (build / 'c16-sound-fx.prg').read_bytes()
 load = int.from_bytes(prg[:2], 'little')
 offset = 2 + symbols['sfx_durations'] - load
-prefix = build / 'game-inspired-pal'
+assert args.last < symbols['SFX_COUNT']
+looping = args.cycles > 1
+if looping:
+    flag_offset = 2 + symbols['sfx_flags'] - load
+    assert all(prg[flag_offset + i] & 1 for i in range(args.first, args.last + 1))
+prefix = build / ('wing-loops-pal' if looping else 'life-lost-pal' if args.first >= 75 else 'game-inspired-pal')
 commands = ['delete 1', 'warp off']
-for effect in range(50, 70):
-    frames = prg[offset + effect] + 12  # natural end followed by audible gap
+if looping:
+    commands += ['keybuf "l"', f"until ${symbols['toggle_loop']:04x}",
+                 f"until ${symbols['poll']:04x}"]
+for effect in range(args.first, args.last + 1):
+    frames = prg[offset + effect] * args.cycles + (0 if looping else 12)  # natural end followed by audible gap
     commands += [f'keybuf "{effect:02d}\\x0d"',
                  f"until ${symbols['sfx_play']:04x}",
                  f"until ${symbols['poll']:04x}",
                  f"break ${symbols['sfx_tick']:04x}", f'ignore 1 ${frames:02x}',
                  'x', 'delete 1',
-                 f'bsave "{prefix}-{effect}-ended.bin" 0 $ff11 $ff11']
+                 f'bsave "{prefix}-{effect}-active.bin" 0 '
+                 f"${symbols['sfx_active']:04x} ${symbols['sfx_active']:04x}"]
+    if looping:
+        commands += ['keybuf "s"', f"until ${symbols['stop']:04x}",
+                     f"until ${symbols['poll']:04x}"]
+    commands += [f'bsave "{prefix}-{effect}-ended.bin" 0 $ff11 $ff11']
+    if looping:
+        commands += [f"break ${symbols['sfx_tick']:04x}", 'ignore 1 $0c',
+                     'x', 'delete 1', 'keybuf "l"',
+                     f"until ${symbols['toggle_loop']:04x}", f"until ${symbols['poll']:04x}"]
 commands += ['quit']
 script = prefix.with_suffix('.mon')
 script.write_text('\n'.join(commands) + '\n')
 with prefix.with_suffix('.stdout.log').open('w') as output:
     result = subprocess.run([
-        sys.argv[1] if len(sys.argv) > 1 else 'xplus4', '-default', '-console',
+        args.vice, '-default', '-console',
         '-model', 'c16', '-ramsize', '16', '-pal', '-sound', '-soundoutput', '1',
-        '-sounddev', sys.argv[2] if len(sys.argv) > 2 else 'coreaudio',
+        '-sounddev', args.sound_device,
         '-warp', '-soundwarpmode', '1', '-soundrecdev', 'wav',
         '-soundrecarg', str(prefix.with_suffix('.wav')),
         '-autostartprgmode', '1', '-autostart', str(build / 'c16-sound-fx.prg'),
@@ -39,7 +65,8 @@ with prefix.with_suffix('.stdout.log').open('w') as output:
         '-limitcycles', '40000000'
     ], cwd=root, stdout=output, stderr=subprocess.STDOUT, timeout=60)
 assert result.returncode == 0
-for effect in range(50, 70):
+for effect in range(args.first, args.last + 1):
+    assert Path(f'{prefix}-{effect}-active.bin').read_bytes() == bytes([int(looping)])
     assert Path(f'{prefix}-{effect}-ended.bin').read_bytes() == b'\x00'
 # VICE monitor quit can leave provisional RIFF lengths. Preserve captured PCM.
 path = prefix.with_suffix('.wav')
@@ -56,5 +83,6 @@ with wave.open(str(path), 'wb') as recording:
     recording.setsampwidth(width)
     recording.setframerate(rate)
     recording.writeframes(pcm)
-print(f'Preview: {path}; IDs 50-69, {len(pcm)/(channels*width*rate):.2f} s; '
-      'non-silent PCM and 20 natural endings verified, listening assessment open')
+print(f'Preview: {path}; IDs {args.first}-{args.last}, {len(pcm)/(channels*width*rate):.2f} s; '
+      f'non-silent PCM and {args.last-args.first+1} ' +
+      ('loops/stops' if looping else 'natural endings') + ' verified, listening assessment open')

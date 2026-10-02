@@ -2,7 +2,7 @@
 
 ## Ziel und Umfang
 
-Ein mit ACME assembliertes Programm für den Commodore 16 zeigt eine Liste mit genau 70 benannten Soundeffekten. Der Benutzer wählt einen Effekt und spielt ihn ab. Die Effekte sind für Spiele gedacht: kurze Geräusche, kurze Tonfolgen und wiederholbare Geräuschzyklen, keine Musikstücke. Diese Spezifikation definiert den Zielumfang; der tatsächliche Umsetzungs- und Prüfstand steht in `docs/status.md`.
+Ein mit ACME assembliertes Programm für den Commodore 16 zeigt eine Liste mit genau 80 benannten Soundeffekten. Der Benutzer wählt einen Effekt und spielt ihn ab. Die Effekte sind für Spiele gedacht: kurze Geräusche, kurze Tonfolgen und wiederholbare Geräuschzyklen, keine Musikstücke. Diese Spezifikation definiert den Zielumfang; der tatsächliche Umsetzungs- und Prüfstand steht in `docs/status.md`.
 
 Zielgerät ist ein unveränderter C16 mit 16 KB RAM, zunächst PAL. C116 und Plus/4 sollen ohne zusätzliche Hardware funktionieren. NTSC wird über eine explizite Zeitbasis und passende Frequenzwerte unterstützt und separat geprüft.
 
@@ -17,8 +17,8 @@ Relevante Register: `$FF0E` (Ton 1, Frequenz unten), `$FF0F` (Ton 2/Rauschen, Fr
 ## Bedienung und Anzeige
 
 - 40 × 25 Zeichen, PETSCII-kompatible Namen ohne Umlaute.
-- Drei Seiten: 24, 24 und 22 Einträge; ein Eintrag pro Zeile mit ID und Name.
-- Inverse Kopfzeile mit `C=16 Sound FX`, Loopstatus `ON/OFF` vor `(H)elp` und rechts Seite `1/3` bis `3/3`; alle 24 Zeilen darunter sind Listeneinträgen vorbehalten, ohne Status- oder Fußzeile. Hintergrund und Rahmen verwenden den konfigurierbaren Wert `TED_BG_COLOR` (aktuell `$36`), weiße Schrift (`$71`).
+- Vier Seiten: 24, 24, 24 und 8 Einträge; ein Eintrag pro Zeile mit ID und Name.
+- Inverse Kopfzeile mit `C=16 Sound FX`, Loopstatus `ON/OFF` vor `(H)elp` und rechts Seite `1/4` bis `4/4`; alle 24 Zeilen darunter sind Listeneinträgen vorbehalten, ohne Status- oder Fußzeile. Hintergrund und Rahmen verwenden den konfigurierbaren Wert `TED_BG_COLOR` (aktuell `$36`), weiße Schrift (`$71`).
 - Anzeige nach zusammenhängenden Kategorien sortieren; vor jedem Namen `(KATEGORIE)` zeigen; Namen beginnen in Spalte 20 (nullbasiert). Kategorien dürfen über Seitenwechsel weiterlaufen. Sortierung verändert die stabilen IDs nicht.
 - Separate Hilfeseite mit allen Tastaturbefehlen: H öffnet/schließt sie; RETURN/SPACE kehrt zum Katalog zurück. Auswahl und laufende Wiedergabe bleiben erhalten. Navigation und ID-Eingabe sind auf der Hilfeseite gesperrt; Loop, Stop, Videostandardwechsel und Exit bleiben verfügbar.
 - Cursor hoch/runter: Auswahl; links/rechts: Seite. Auswahlgrenzen werden begrenzt, kein unbeabsichtigtes Umspringen.
@@ -31,7 +31,7 @@ Relevante Register: `$FF0E` (Ton 1, Frequenz unten), `$FF0F` (Ton 2/Rauschen, Fr
 
 ## Effektkatalog
 
-IDs sind zugleich stabile API-IDs (0–69). T = Ton, R = Rauschen, T+R = Kombination. Zeiten sind ungefähre Gestaltungsziele, keine bereits gemessenen Werte. „Loop“ kennzeichnet einen bewusst gestalteten wiederholbaren Zyklus; alle anderen Effekte sind kurze Einzeleffekte.
+IDs sind zugleich stabile API-IDs (0–79). T = Ton, R = Rauschen, T+R = Kombination. Zeiten sind ungefähre Gestaltungsziele, keine bereits gemessenen Werte. „Loop“ kennzeichnet einen bewusst gestalteten wiederholbaren Zyklus; alle anderen Effekte sind kurze Einzeleffekte.
 
 | ID | Name | Quelle | Zielzeit | Charakter / Einsatz | Loop |
 |---:|---|---|---|---|:---:|
@@ -105,6 +105,16 @@ IDs sind zugleich stabile API-IDs (0–69). T = Ton, R = Rauschen, T+R = Kombina
 | 67 | fortnite-shield | T+R | 0,42 s | Fortnite: Schildtrank – stilisierte TED-Annäherung |  |
 | 68 | apex-ping | T | 0,24 s | Apex Legends: Ping – stilisierte TED-Annäherung |  |
 | 69 | zelda-discovery | T | 0,56 s | Zelda Breath of the Wild: Entdeckung – stilisierte TED-Annäherung |  |
+| 70 | flap-soft | R | 0,24 s | Weicher leiser Rauschbogen mit kurzer Ruhephase | ja |
+| 71 | flap-snappy | T+R | 0,16 s | Knackiger Ton-/Rauschimpuls mit Ruhephase | ja |
+| 72 | flap-double | R | 0,32 s | Zwei unterschiedlich starke Fluegelschlaege je Zyklus | ja |
+| 73 | flap-flutter | T+R | 0,24 s | Drei schnelle modulierte Schlaege mit Ruhephase | ja |
+| 74 | flap-chirp | T+R | 0,32 s | Leichter Fluegelschlag mit kurzem Zwitscherbogen | ja |
+| 75 | life-fall | T+R | 0,28 s | Leben verloren: fall | |
+| 76 | life-thud | T+R | 0,28 s | Leben verloren: thud | |
+| 77 | life-sigh | T | 0,44 s | Leben verloren: sigh | |
+| 78 | life-sad | T | 0,52 s | Leben verloren: sad | |
+| 79 | life-wobble | T | 0,48 s | Leben verloren: wobble | |
 
 ## Architektur und Integration in Spiele
 
@@ -113,7 +123,7 @@ Die Wiedergabe wird vom Menü getrennt. Eine datengetriebene Engine spielt genau
 Öffentliche Routinen:
 
 - `sfx_init`: Zustand initialisieren, Sound ausschalten, gemeinsam genutzte Registerbits sichern.
-- `sfx_play`: A = ID 0–69; startet den Effekt ohne Warteschleife. Ungültige IDs liefern Carry gesetzt und lassen den bisherigen Zustand bestehen; gültige IDs liefern Carry gelöscht.
+- `sfx_play`: A = ID 0–79; startet den Effekt ohne Warteschleife. Ungültige IDs liefern Carry gesetzt und lassen den bisherigen Zustand bestehen; gültige IDs liefern Carry gelöscht.
 - `sfx_tick`: exakt einmal je Video-Frame vom aufrufenden Programm aufrufen; führt höchstens einen fälligen Effektschritt aus, ohne zu warten.
 - `sfx_stop`: stoppt alle von der Engine verwendeten Klangquellen und verwirft Wiederholung.
 - `sfx_set_loop`: A = 0/1; steuert Wiederholung. Ausschalten lässt den aktuellen Durchlauf zu Ende spielen.
@@ -137,14 +147,14 @@ ACME erzeugt ein CBM-PRG mit BASIC-SYS-Startstub ab `$1001`. Die tatsächliche S
 
 1. Reproduzierbarer ACME-Build liefert ein auf dem 16-KB-C16 startbares PRG.
    `make run` baut und startet die Demo in der installierten VICE-Version; die Effekte sind über deren Audioausgabe hörbar.
-2. Genau 70 stabile IDs und eindeutige Namen; alle Einträge sind erreichbar und spielbar.
+2. Genau 80 stabile IDs und eindeutige Namen; alle Einträge sind erreichbar und spielbar.
 3. Ton, Rauschen, kombinierte Effekte und kurze Tonfolgen sind vertreten.
 4. Alle Einzeleffekte enden selbständig und hinterlassen keine eingeschaltete Klangquelle.
 5. Wiederholung funktioniert bis zum Stop; gestaltete Loops haben keinen unbeabsichtigten stummen Frame am Zyklusübergang. Physikalisch völlig klickfreie Übergänge sind kein pauschales Versprechen.
 6. Navigation, Neustart, Stop und Exit funktionieren während der Wiedergabe; Stop wirkt spätestens im nächsten Frame.
 7. Keine Bildbeschädigung durch Soundregisterzugriffe, keine Speicherüberschreitung.
 8. Engine ist unabhängig vom Menü in ein kleines Beispielspiel integrierbar.
-9. Emulatorprüfung mit 16 KB RAM und Hörprüfung aller 70 Effekte; NTSC separat. Prüfung auf echter Hardware ist wünschenswert und wird nur bei tatsächlicher Durchführung als bestanden ausgewiesen.
+9. Emulatorprüfung mit 16 KB RAM und Hörprüfung aller 80 Effekte; NTSC separat. Prüfung auf echter Hardware ist wünschenswert und wird nur bei tatsächlicher Durchführung als bestanden ausgewiesen.
 10. Gemessene RAM-Nutzung und maximale Tick-Laufzeit werden in `docs/engine.md` festgehalten. Ziel für `sfx_tick`: höchstens 1.000 CPU-Zyklen pro Aufruf, ohne Menü und IRQ-Verwaltung; am langsameren CPU-Takt bewerten.
 
 ## Technische Referenzen

@@ -29,5 +29,6 @@ KERNAL_SHIFT = $0543
 KERNAL_REPEAT = $0540          ; bit 6 disables all KERNAL key repeat
 KERNAL_STOP = $ffe1
 
-SFX_COUNT = 70                 ; original 0-49 plus game-inspired 50-69
+SFX_COUNT = 80                 ; original 0-49, game-inspired 50-69, wing loops 70-74, life lost 75-79
 !if SFX_COUNT > 128 { !error "Catalog lookup supports at most 128 entries" }
+SFX_PAGE_COUNT = (SFX_COUNT+23)/24

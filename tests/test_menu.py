@@ -129,6 +129,6 @@ for ntsc, delay, interval in ((0, 25, 5), (1, 30, 6)):
     call('menu_shutdown')
     assert cpu.memory[0x0540] == 0x80
 
-print('Menu checks passed: 70 categorized selected starts, inverse header/help, '
+print(f'Menu checks passed: {COUNT} categorized selected starts, inverse header/help, '
       'PAL/NTSC held navigation, release, bounds, '
       'live-loop isolation, STOP, repeat-setting restoration')

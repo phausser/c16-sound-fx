@@ -1,6 +1,6 @@
 # Effektkatalog – Schritt 3
 
-Der ursprüngliche Katalog (IDs 0–49) besitzt 208 Schritte. Die Erweiterung auf 70 IDs hat insgesamt 329 Schritte; die neuen Vorbild-Effekte sind in `game-inspired.md` beschrieben. Tonfolgen, Frequenzbögen, Rauschhüllkurven, verstimmte Tonpaare und kombinierte Quellen werden als begrenzte Datenstreams gespeichert. Kombinationen teilen eine Lautstärke und verwenden Ton 1 plus Rauschen; Metall-/Motoreffekte nutzen bewusst beide Tonkanäle.
+Der ursprüngliche Katalog (IDs 0–49) besitzt 208 Schritte. Die Erweiterung auf 80 IDs hat insgesamt 387 Schritte; die neuen Vorbild-Effekte sind in `game-inspired.md` beschrieben. Tonfolgen, Frequenzbögen, Rauschhüllkurven, verstimmte Tonpaare und kombinierte Quellen werden als begrenzte Datenstreams gespeichert. Kombinationen teilen eine Lautstärke und verwenden Ton 1 plus Rauschen; Metall-/Motoreffekte nutzen bewusst beide Tonkanäle.
 
 Die folgende Dauer ergibt sich aus den Schrittdaten bei 50 logischen Ticks/s. Ziele zwischen zwei Ticks werden auf den nächsten Tick gerundet (z. B. 0,25 s auf 13 Ticks / 0,26 s). Unter NTSC ist der erste/letzte Frame zusätzlich von der laufenden Akkumulatorphase abhängig. Getrennte 10-Bit-Frequenzwerte berücksichtigen den jeweiligen TED-Takt; die größte rechnerische PAL-/NTSC-Abweichung der nominalen Frequenzen im ursprünglichen Katalog beträgt 1,32 % durch Registerquantisierung.
 
@@ -83,3 +83,13 @@ Die ursprünglichen 50 Effekte bleiben unter ihren IDs unverändert.
 und offene Hörabnahme stehen in [game-inspired.md](game-inspired.md).
 Turrican-Strahl und Lotus-Motor ergänzen zwei gestaltete Loops;
 insgesamt sind zehn Effekte ausdrücklich loopbar.
+
+## Fünf Flügelschlag-Loops
+
+IDs 70–74 ergänzen fünf zyklische Flügelschlag-Varianten in BEWEGUNG. Alle sind explizit loopbar; zusammen mit dem bisherigen Katalog jetzt 80 Effekte und 15 gestaltete Loops. Beschreibung und Integration: [wing-loops.md](wing-loops.md).
+
+## Lebensverlust
+
+IDs 75–79 ergänzen fünf einmalige Lebensverlust-Sounds unter JINGLE.
+Der Katalog umfasst jetzt 80 Effekte, vier Seiten (24/24/24/8) und weiterhin 15 Loops.
+Details und drei Flappy-Bird-Beispiele: [life-lost.md](life-lost.md).

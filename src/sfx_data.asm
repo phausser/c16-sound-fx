@@ -488,6 +488,84 @@
     +step 5, 1976, 110, $13, .clock
     +step 7, 2637, 110, $11, .clock
     !byte 0
+.fx70: ; 70: flap-soft, 12 ticks, intentional wing-rest pause
+    +step 1, 110, 1500, $42, .clock
+    +step 2, 110, 1100, $43, .clock
+    +step 2, 110, 700, $42, .clock
+    +step 2, 110, 400, $41, .clock
+    +step 5, 110, 110, $00, .clock
+    !byte 0
+.fx71: ; 71: flap-snappy, 8 ticks, intentional wing-rest pause
+    +step 1, 440, 2400, $54, .clock
+    +step 1, 330, 1600, $54, .clock
+    +step 1, 220, 950, $53, .clock
+    +step 1, 160, 500, $51, .clock
+    +step 4, 110, 110, $00, .clock
+    !byte 0
+.fx72: ; 72: flap-double, 16 ticks, intentional wing-rest pause
+    +step 1, 110, 2000, $43, .clock
+    +step 2, 110, 1200, $42, .clock
+    +step 2, 110, 110, $00, .clock
+    +step 1, 110, 1700, $44, .clock
+    +step 2, 110, 850, $42, .clock
+    +step 2, 110, 450, $41, .clock
+    +step 6, 110, 110, $00, .clock
+    !byte 0
+.fx73: ; 73: flap-flutter, 12 ticks, intentional wing-rest pause
+    +step 1, 330, 1800, $53, .clock
+    +step 1, 260, 900, $52, .clock
+    +step 1, 110, 110, $00, .clock
+    +step 1, 390, 2100, $53, .clock
+    +step 1, 300, 1050, $52, .clock
+    +step 1, 110, 110, $00, .clock
+    +step 1, 440, 2400, $53, .clock
+    +step 1, 330, 1200, $52, .clock
+    +step 4, 110, 110, $00, .clock
+    !byte 0
+.fx74: ; 74: flap-chirp, 16 ticks, intentional wing-rest pause
+    +step 1, 700, 1600, $52, .clock
+    +step 2, 950, 1100, $53, .clock
+    +step 2, 1300, 650, $52, .clock
+    +step 1, 110, 110, $00, .clock
+    +step 1, 1700, 110, $13, .clock
+    +step 2, 2100, 110, $12, .clock
+    +step 1, 1600, 110, $11, .clock
+    +step 6, 110, 110, $00, .clock
+    !byte 0
+.fx75: ; 75: life-fall, 14 ticks, life lost one-shot
+    +step 2, 900, 1800, $54, .clock
+    +step 3, 600, 1200, $53, .clock
+    +step 4, 350, 700, $52, .clock
+    +step 5, 140, 300, $51, .clock
+    !byte 0
+.fx76: ; 76: life-thud, 14 ticks, life lost one-shot
+    +step 2, 130, 1600, $55, .clock
+    +step 3, 120, 700, $54, .clock
+    +step 4, 115, 300, $52, .clock
+    +step 5, 110, 180, $11, .clock
+    !byte 0
+.fx77: ; 77: life-sigh, 22 ticks, life lost one-shot
+    +step 4, 440, 460, $33, .clock
+    +step 5, 370, 390, $33, .clock
+    +step 6, 294, 310, $32, .clock
+    +step 7, 220, 230, $31, .clock
+    !byte 0
+.fx78: ; 78: life-sad, 26 ticks, life lost one-shot
+    +step 5, 392, 110, $13, .clock
+    +step 1, 110, 110, $00, .clock
+    +step 5, 330, 110, $13, .clock
+    +step 1, 110, 110, $00, .clock
+    +step 7, 262, 110, $12, .clock
+    +step 7, 196, 110, $11, .clock
+    !byte 0
+.fx79: ; 79: life-wobble, 24 ticks, life lost one-shot
+    +step 3, 330, 345, $34, .clock
+    +step 3, 294, 308, $33, .clock
+    +step 3, 311, 326, $33, .clock
+    +step 4, 247, 260, $32, .clock
+    +step 4, 262, 275, $32, .clock
+    +step 7, 165, 174, $31, .clock
+    !byte 0
     .export_table = *
     !word .fx0, .fx0
     !word .fx1, .fx1
@@ -559,6 +637,16 @@
     !word .fx67, .fx67
     !word .fx68, .fx68
     !word .fx69, .fx69
+    !word .fx70, .fx70
+    !word .fx71, .fx71
+    !word .fx72, .fx72
+    !word .fx73, .fx73
+    !word .fx74, .fx74
+    !word .fx75, .fx75
+    !word .fx76, .fx76
+    !word .fx77, .fx77
+    !word .fx78, .fx78
+    !word .fx79, .fx79
     !if * - .export_table != SFX_COUNT*4 { !error "Catalog pointer table size" }
 }
 !zone pal_data {
@@ -570,9 +658,13 @@
 sfx_flags:
     !byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,3,1,0
     !byte 0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0
+    !byte 1,1,1,1,1
+    !byte 0,0,0,0,0
 sfx_durations:
     !byte 30,30,20,25,13,6,10,10,25,25,2,6,6,10,8,9,13,5,10,30,4,5,20,20,25,8,10,12,15,40,10,8,10,13,20,13,20,10,2,18,30,20,30,25,3,15,18,30,40,13
     !byte 7,3,7,13,13,8,8,29,25,12,10,18,12,50,11,14,32,21,12,28
+    !byte 12,8,16,12,16
+    !byte 14,14,22,26,24
 sfx_names:
     !word sfx_name_0
     !word sfx_name_1
@@ -644,6 +736,16 @@ sfx_names:
     !word sfx_name_67
     !word sfx_name_68
     !word sfx_name_69
+    !word sfx_name_70
+    !word sfx_name_71
+    !word sfx_name_72
+    !word sfx_name_73
+    !word sfx_name_74
+    !word sfx_name_75
+    !word sfx_name_76
+    !word sfx_name_77
+    !word sfx_name_78
+    !word sfx_name_79
 SFX_JINGLE_WIN = 0
 sfx_name_0: !pet "jingle-win",0
 SFX_JINGLE_LOSE = 1
@@ -784,7 +886,28 @@ SFX_APEX_PING = 68
 sfx_name_68: !pet "apex-ping",0
 SFX_ZELDA_DISCOVERY = 69
 sfx_name_69: !pet "zelda-discovery",0
+SFX_FLAP_SOFT = 70
+sfx_name_70: !pet "flap-soft",0
+SFX_FLAP_SNAPPY = 71
+sfx_name_71: !pet "flap-snappy",0
+SFX_FLAP_DOUBLE = 72
+sfx_name_72: !pet "flap-double",0
+SFX_FLAP_FLUTTER = 73
+sfx_name_73: !pet "flap-flutter",0
+SFX_FLAP_CHIRP = 74
+sfx_name_74: !pet "flap-chirp",0
 sfx_data_end:
+SFX_LIFE_FALL = 75
+sfx_name_75: !pet "life-fall",0
+SFX_LIFE_THUD = 76
+sfx_name_76: !pet "life-thud",0
+SFX_LIFE_SIGH = 77
+sfx_name_77: !pet "life-sigh",0
+SFX_LIFE_SAD = 78
+sfx_name_78: !pet "life-sad",0
+SFX_LIFE_WOBBLE = 79
+sfx_name_79: !pet "life-wobble",0
+
 !if sfx_durations - sfx_flags != SFX_COUNT { !error "Exactly SFX_COUNT flags required" }
 !if sfx_names - sfx_durations != SFX_COUNT { !error "Exactly SFX_COUNT durations required" }
 !if sfx_name_0 - sfx_names != SFX_COUNT*2 { !error "Exactly SFX_COUNT names required" }
