@@ -2,7 +2,7 @@
 
 ## Ziel und Umfang
 
-Ein mit ACME assembliertes Programm für den Commodore 16 zeigt eine Liste mit genau 50 benannten Soundeffekten. Der Benutzer wählt einen Effekt und spielt ihn ab. Die Effekte sind für Spiele gedacht: kurze Geräusche, kurze Tonfolgen und wiederholbare Geräuschzyklen, keine Musikstücke. Diese Spezifikation plant die Umsetzung; Assemblercode folgt in einem späteren Arbeitsschritt.
+Ein mit ACME assembliertes Programm für den Commodore 16 zeigt eine Liste mit genau 50 benannten Soundeffekten. Der Benutzer wählt einen Effekt und spielt ihn ab. Die Effekte sind für Spiele gedacht: kurze Geräusche, kurze Tonfolgen und wiederholbare Geräuschzyklen, keine Musikstücke. Diese Spezifikation definiert den Zielumfang; der tatsächliche Umsetzungs- und Prüfstand steht in `README.md`.
 
 Zielgerät ist ein unveränderter C16 mit 16 KB RAM, zunächst PAL. C116 und Plus/4 sollen ohne zusätzliche Hardware funktionieren. NTSC wird über eine explizite Zeitbasis und passende Frequenzwerte unterstützt und separat geprüft.
 

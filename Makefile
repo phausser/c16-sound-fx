@@ -6,7 +6,7 @@ VICE_STANDARD ?= pal
 PRG := build/c16-sound-fx.prg
 SOURCES := $(wildcard src/*.asm src/*.inc)
 
-.PHONY: all run test test-vice clean
+.PHONY: all run test test-vice record-vice clean
 all: $(PRG)
 
 $(PRG): $(SOURCES) Makefile | build
@@ -23,6 +23,9 @@ test: $(PRG)
 
 test-vice: $(PRG)
 	$(PYTHON) tests/vice_smoke.py $(VICE)
+
+record-vice: $(PRG)
+	$(PYTHON) tests/vice_smoke.py $(VICE) --record --sound-device $(VICE_SOUND_DEVICE)
 
 clean:
 	$(RM) -r build

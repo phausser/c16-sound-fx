@@ -6,9 +6,9 @@ Der C16 erzeugt seinen Sound mit dem TED: zwei Rechteck-Tonkanäle und ein Rausc
 
 ## Aktueller Stand
 
-Build und nicht blockierende Soundengine sind implementiert. Die Demo spielt vier Prototypen: `jingle-win`, `landing`, `blaster-shot` und `alarm`. Die übrigen 46 IDs sind vorläufig stumm; vollständiger Katalog und Auswahlmenü folgen. ACME-Build und automatisierte Engine- sowie VICE-Prüfungen auf PAL/NTSC mit 16 KB RAM bestehen. Hörprüfung und visuelle Grafikprüfung sind offen.
+Build, nicht blockierende Soundengine und alle 50 Effektdaten sind implementiert. Die Katalogdemo startet jeden Effekt über seine stabile ID 00–49. Acht Effekte haben gestaltete Loops; `fire-crackle` verwendet reproduzierbare Knistervariation. Das vollständige Auswahlmenü folgt in Schritt 4. CPU-Tests und VICE-Prüfungen auf PAL/NTSC mit 16 KB RAM bestehen; die Startanzeige ist visuell geprüft. Klangabstimmung und Hardwareprüfung bleiben offen.
 
-Die Prototypdemo belegt 1412 Bytes; die Engine mit Tabellen und Prototypdaten 1071 Bytes, ohne Zero Page. Der höchste getestete Tick benötigt 292 CPU-Zyklen. API, Einbindung und Messgrenzen: [docs/engine.md](docs/engine.md). Hardwaregrundlage: [docs/hardware.md](docs/hardware.md).
+Die Demo belegt 4676 Bytes; die Engine samt vollständigem Katalog 4269 Bytes, ohne Zero Page. Der höchste getestete Tick benötigt 332 CPU-Zyklen. API und Messgrenzen: [docs/engine.md](docs/engine.md). Katalog und Prüfungen: [docs/effects.md](docs/effects.md). Hardwaregrundlage: [docs/hardware.md](docs/hardware.md).
 
 - [SPEC.md](SPEC.md): Anforderungen, vollständiger Katalog der 50 Effekte, API und Abnahme.
 - [TOOD.md](TOOD.md): Umsetzungsschritte und Prüfungen.
@@ -33,17 +33,17 @@ Andere Toolpfade sind über Make-Variablen auswählbar:
 make run ACME=/pfad/zu/acme VICE=/pfad/zu/xplus4
 ```
 
-## Prototypdemo bedienen
+## Katalogdemo bedienen
 
 | Taste | Aktion |
 |---|---|
-| 1–4 | Win, Landing, Blaster oder Alarm starten/neustarten |
+| 00–49, dann RETURN oder SPACE | Effekt per ID starten/neustarten |
 | L | Wiederholung umschalten |
 | S | Wiedergabe und Wiederholung stoppen |
 | Q | Ressourcen freigeben und nach BASIC zurückkehren |
 | P / N | PAL / NTSC wählen; muss zum Emulator passen, stoppt Wiedergabe |
 
-Die Demo startet mit PAL und Wiederholung aus. Für NTSC: `make run VICE_STANDARD=ntsc`, anschließend N drücken. Ein anderer Audiotreiber ist über `VICE_SOUND_DEVICE` wählbar. Aktionsentprellung folgt mit dem Menü.
+Die Demo startet mit ID 00, PAL und Wiederholung aus. Beispielsweise startet `24` und RETURN den Effekt `vogelflug`. Ein oder zwei Ziffern werden angenommen; eine dritte Ziffer beginnt eine neue Eingabe. Ungültige IDs 50–99 lassen die Wiedergabe unverändert. Für NTSC: `make run VICE_STANDARD=ntsc`, anschließend N drücken. Ein anderer Audiotreiber ist über `VICE_SOUND_DEVICE` wählbar. Aktionsentprellung folgt mit dem Menü.
 
 ## Automatisierte Prüfung
 
@@ -54,9 +54,10 @@ python3 -m venv /private/tmp/c16-engine-test
 /private/tmp/c16-engine-test/bin/python -m pip install -r tests/requirements.txt
 make test PYTHON=/private/tmp/c16-engine-test/bin/python
 make test-vice
+make record-vice
 ```
 
-`make test-vice` verwendet den Dummy-Audiotreiber; es prüft Bildschirmtext, Prototypstarts und -ende sowie die Rückkehr nach BASIC, ohne Hörprüfung.
+`make test-vice` verwendet den Dummy-Audiotreiber; es prüft alle 50 Starts und natürlichen Enden, acht Loops mit Stop, ID-Eingabe, Bildschirmdaten und die Rückkehr nach BASIC. `make record-vice` führt denselben Test mit CoreAudio und WAV-Aufnahme ohne Warp durch; die Klangbeurteilung erfolgt separat.
 
 ## Geplante Bedienung
 

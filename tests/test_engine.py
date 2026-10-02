@@ -68,7 +68,8 @@ class Engine:
 
 
 for ntsc in (0, 1):
-    for effect, duration in ((0, 30), (17, 5), (26, 10), (43, 25)):
+    for effect in range(50):
+        duration = Engine().mem[SYMBOLS["sfx_durations"] + effect]
         e = Engine(ntsc)
         e.call("sfx_play", effect)
         assert e.state("sfx_active") == 1
@@ -130,7 +131,7 @@ e.ticks(10)
 e.call("sfx_shutdown")
 assert e.mem[0xff12] == e.saved[4]
 
-# All stable slots are bounded, including unfinished silent entries.
+# All stable slots are bounded.
 for effect in range(50):
     e = Engine()
     e.call("sfx_play", effect)
@@ -170,6 +171,116 @@ e.ticks(5)
 e.call('sfx_set_loop', 0)
 e.ticks(10)
 assert not e.state('sfx_active') and not e.mem[0xff11]
+
+# Catalog independently checked against the specification, including source type.
+spec = re.findall(r'^\| (\d+) \| ([a-z0-9-]+) \| (T\+R|T|R) \| ([0-9,]+) s \| .*? \|\s*(ja)?\s*\|',
+                  (ROOT / 'SPEC.md').read_text(), re.M)
+assert len(spec) == 50
+base = Engine()
+names = []
+for ident, expected_name, source, seconds, loop in spec:
+    effect = int(ident)
+    ptr = int.from_bytes(bytes(base.mem[SYMBOLS['sfx_names'] + effect*2:
+                                      SYMBOLS['sfx_names'] + effect*2 + 2]), 'little')
+    end = base.mem.index(0, ptr, ptr + 32)
+    name = bytes(base.mem[ptr:end]).decode('ascii').lower()
+    assert name == expected_name
+    names.append(name)
+    assert bool(base.mem[SYMBOLS['sfx_flags'] + effect] & 1) == bool(loop)
+assert len(set(names)) == 50
+
+for standard in (0, 1):
+    base = Engine(standard)
+    table = SYMBOLS['sfx_table_ntsc' if standard else 'sfx_table_pal']
+    streams = []
+    for ident, name, source, seconds, loop in spec:
+        effect = int(ident)
+        ptr = int.from_bytes(bytes(base.mem[table + effect*4:table + effect*4 + 2]), 'little')
+        repeat = int.from_bytes(bytes(base.mem[table + effect*4 + 2:table + effect*4 + 4]), 'little')
+        steps, addresses = [], []
+        for _ in range(255):
+            assert 0x1001 <= ptr < SYMBOLS['sfx_data_end']
+            if base.mem[ptr] == 0:
+                break
+            addresses.append(ptr)
+            step = tuple(base.mem[ptr:ptr+6])
+            assert step[0] > 0 and step[2] <= 3 and step[4] <= 3
+            control = step[5]
+            assert control & 15 <= 8 and control & 0x80 == 0
+            assert control & 0x60 != 0x60
+            if source == 'T':
+                assert control & 0x40 == 0
+            if source == 'R':
+                assert control & 0x30 == 0
+            steps.append(step)
+            ptr += 6
+        else:
+            raise AssertionError('unbounded effect')
+        assert steps and repeat in addresses
+        duration = sum(s[0] for s in steps)
+        assert duration == base.mem[SYMBOLS['sfx_durations'] + effect]
+        assert abs(duration / 50 - float(seconds.replace(',', '.'))) <= 0.010001
+        assert any(s[5] & 0x70 and s[5] & 15 for s in steps)
+        if source == 'T+R':
+            assert any(s[5] & 0x50 == 0x50 for s in steps)
+        streams.append(tuple(steps))
+
+        e = Engine(standard)
+        e.call('sfx_set_loop', 1)
+        e.call('sfx_play', effect)
+        frames = (duration * 60 + 49) // 50 if standard else duration
+        e.ticks(frames)
+        if loop:
+            assert e.state('sfx_delay') == steps[0][0]
+            assert e.mem[0xff11] == steps[0][5] and not e.state('sfx_gap')
+            e.ticks(frames * 3)
+            assert e.state('sfx_active') and not e.state('sfx_gap')
+        else:
+            assert not e.mem[0xff11] and e.state('sfx_gap')
+            e.ticks(11 if standard else 9)
+            assert not e.mem[0xff11]
+            e.ticks(1)
+            assert e.mem[0xff11] == steps[0][5]
+        e.call('sfx_stop')
+        e.ticks(100)
+        assert not e.mem[0xff11] and not e.state('sfx_active')
+    assert len(set(streams)) == 50, 'duplicate sound streams'
+
+# Intentional pauses are preserved, with no extra silent frame at loop seams.
+for ident, _, _, _, loop in spec:
+    if not loop:
+        continue
+    effect = int(ident)
+    e = Engine()
+    duration = e.mem[SYMBOLS['sfx_durations'] + effect]
+    e.call('sfx_set_loop', 1)
+    e.call('sfx_play', effect)
+    controls = []
+    for _ in range(duration * 4):
+        controls.append(e.mem[0xff11])
+        e.ticks(1)
+    assert controls[:duration] == controls[duration:2*duration]
+    assert controls[:duration] == controls[3*duration:]
+    e.call('sfx_set_loop', 0)
+    e.ticks(duration)
+    assert not e.state('sfx_active') and not e.mem[0xff11]
+
+# Knistervariation changes between cycles but is repeatable on each play.
+def fire_trace(e):
+    e.call('sfx_set_loop', 1)
+    e.call('sfx_play', 47)
+    values = []
+    for _ in range(60):
+        values.append(e.mem[0xff0f])
+        e.ticks(1)
+    return values
+
+fire = Engine()
+first = fire_trace(fire)
+assert first == fire_trace(fire) == fire_trace(Engine())
+assert first[:30] != first[30:]
+assert fire.state('sfx_random') != 0
+print('Catalog checks passed: 50 stable IDs/names, unique streams, all durations and loop seams')
 
 print(f"Engine checks passed; maximum measured tick: {MAX_TICK} CPU cycles")
 print(f"Code: {SYMBOLS['sfx_code_end'] - SYMBOLS['sfx_init']} bytes; "

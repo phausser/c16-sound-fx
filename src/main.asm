@@ -15,6 +15,7 @@ basic_end:
     !word 0
 
 entry:
+    cld
     jsr menu_init
     lda #0                    ; demo defaults to PAL; N/P selects standard
     jsr sfx_init
@@ -33,7 +34,9 @@ poll:
 .keys:
     jsr KERNAL_GETIN           ; IRQ keyboard scan stays enabled
     cmp #'Q'
-    beq exit
+    bne +
+    jmp exit
++
     cmp #'S'
     beq stop
     cmp #3                    ; RUN/STOP buffered PETSCII
@@ -44,15 +47,49 @@ poll:
     beq ntsc
     cmp #'P'
     beq pal
-    cmp #'1'
-    bcc poll
-    cmp #'5'
-    bcs poll
+    cmp #13
+    beq play_input
+    cmp #' '
+    beq play_input
+    cmp #'0'
+    bcc ignore_key
+    cmp #'9'+1
+    bcs ignore_key
     sec
-    sbc #'1'
-    tax
-    lda prototype_ids,x
+    sbc #'0'
+    sta input_digit
+    lda input_digits
+    cmp #1
+    beq second_digit
+    lda #0
+    sta input_id
+    sta input_digits
+second_digit:
+    lda input_id
+    clc
+    adc #'0'
+    sta SCREEN_BASE+4*40+4 ; two screen-code digits in the ID field
+    lda input_digit
+    clc
+    adc #'0'
+    sta SCREEN_BASE+4*40+5
+    lda input_id
+    asl
+    sta input_tens
+    asl
+    asl
+    clc
+    adc input_tens
+    adc input_digit
+    sta input_id
+    inc input_digits
+ignore_key:
+    jmp poll
+play_input:
+    lda input_id            ; IDs 50..99 rejected without interrupting playback
     jsr sfx_play
+    lda #0
+    sta input_digits
     jmp poll
 stop:
     jsr sfx_stop
@@ -77,7 +114,10 @@ exit:
     jsr sfx_shutdown
     rts                       ; return through BASIC SYS
 frame_seen: !byte 0
-prototype_ids: !byte 0,17,26,43
+input_id: !byte 0
+input_digits: !byte 0
+input_digit: !byte 0
+input_tens: !byte 0
 
 !source "src/menu.asm"
 !source "src/sfx_engine.asm"

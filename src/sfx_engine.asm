@@ -23,14 +23,20 @@ sfx_init:
     clc
     rts
 
-; play: A=stable ID 0..49. Unfinished catalog slots play silence.
+; play: A=stable ID 0..49. Flag bit 0: seamless loop; bit 1: noise variation.
 !zone sfx_play_zone
 sfx_play:
     cmp #50
     bcs sfx_invalid
     tax
     lda sfx_flags,x
+    and #1
     sta sfx_seamless
+    lda sfx_flags,x
+    and #2
+    sta sfx_variation
+    lda #$a5
+    sta sfx_random
     txa
     asl
     asl
@@ -122,13 +128,16 @@ sfx_step:
     jsr sfx_read
     bne .duration
     lda sfx_loop
-    beq sfx_finish
+    bne +
+    jmp sfx_finish
++
     lda sfx_seamless
     beq .pause
     jsr sfx_rewind_loop
     ldx #0
     jsr sfx_read
-    beq sfx_finish          ; empty slots cannot loop forever
+    bne .duration
+    jmp sfx_finish          ; malformed empty repeat streams cannot loop forever
 .duration:
     sta sfx_delay
     inx
@@ -144,6 +153,20 @@ sfx_step:
     sta TED_FREQ1_HI
     inx
     jsr sfx_read
+    sta sfx_noise
+    lda sfx_variation
+    beq .fixed_noise
+    lda sfx_random          ; reproducible 8-bit Galois LFSR, nonzero seed
+    lsr
+    bcc +
+    eor #$b8
++
+    sta sfx_random
+    and #$0f
+    eor sfx_noise           ; vary only low frequency bits, stay within 10 bits
+    sta sfx_noise
+.fixed_noise:
+    lda sfx_noise
     sta TED_FREQ2_LO
     inx
     jsr sfx_read
@@ -233,4 +256,7 @@ sfx_seamless: !byte 0
 sfx_high:     !byte 0
 sfx_start:    !word 0
 sfx_repeat:   !word 0
+sfx_variation: !byte 0
+sfx_random:    !byte $a5
+sfx_noise:     !byte 0
 sfx_state_end:

@@ -12,7 +12,7 @@ Dateiname `TOOD.md` wie angefordert. Anforderungen und Effekt-IDs stehen in `SPE
 - [ ] `make run` implementieren: bei Bedarf bauen und anschließend in VICE mit hörbarer Audioausgabe automatisch starten; `ACME` und `VICE` als überschreibbare Make-Variablen vorsehen.
 - [x] Speichergrenzen und Überschneidungen als Build-Checks absichern.
 
-Implementierung von `make run` vorhanden; VICE bestätigt Autostart und geöffnetes CoreAudio-Gerät. Q-Rückkehr ist inzwischen per Monitor geprüft; visuelle Grafikprüfung und Hörprüfung bleiben offen. Details: [docs/hardware.md](docs/hardware.md).
+Implementierung von `make run` vorhanden; VICE bestätigt Autostart und geöffnetes CoreAudio-Gerät. Q-Rückkehr ist inzwischen per Monitor geprüft; die Kataloganzeige ist inzwischen visuell geprüft; Hörprüfung bleibt offen. Details: [docs/hardware.md](docs/hardware.md).
 
 ## 2. Wiederverwendbare Soundengine
 
@@ -25,21 +25,23 @@ Implementierung von `make run` vorhanden; VICE bestätigt Autostart und geöffne
 - [ ] Erst je einen Ton-, Rausch-, Kombinations- und Tonfolgen-Prototyp hörbar prüfen.
 - [x] Maximale Tick-Laufzeit und Engine-RAM messen; bei Bedarf Datenformat vereinfachen.
 
-Engine und vier Prototypen implementiert; CPU-Tests und VICE-Monitortests auf PAL/NTSC bestehen. Höchster getesteter Tick: 292 CPU-Zyklen. Hörprüfung offen. API, RAM und Grenzen: [docs/engine.md](docs/engine.md).
+Engine und vollständiger Katalog implementiert; CPU-Tests und VICE-Monitortests auf PAL/NTSC bestehen. Höchster getesteter Tick: 332 CPU-Zyklen. Hörprüfung offen. API, RAM und Grenzen: [docs/engine.md](docs/engine.md).
 
 ## 3. 50 Effekte gestalten
 
-- [ ] IDs 0–9: Erfolg, Niederlage und Sammelaktionen.
-- [ ] IDs 10–14: Menü und Rückmeldungen.
-- [ ] IDs 15–24: Bewegung, Schritte, Schwimmen und Vogelflug.
-- [ ] IDs 25–35: Waffen, Explosionen und Treffer.
-- [ ] IDs 36–40: Objekte und Teleport.
-- [ ] IDs 41–49: Motor, Alarm, Timer und Umgebung.
+- [x] IDs 0–9: Erfolg, Niederlage und Sammelaktionen.
+- [x] IDs 10–14: Menü und Rückmeldungen.
+- [x] IDs 15–24: Bewegung, Schritte, Schwimmen und Vogelflug.
+- [x] IDs 25–35: Waffen, Explosionen und Treffer.
+- [x] IDs 36–40: Objekte und Teleport.
+- [x] IDs 41–49: Motor, Alarm, Timer und Umgebung.
 - [ ] Jeden Effekt anhören und auf verständlichen Charakter, Kürze und passende Lautstärke abstimmen.
-- [ ] Gemeinsame Lautstärke bei kombinierten Quellen berücksichtigen.
-- [ ] Alle markierten Loops über mehrere Zyklen prüfen und Übergänge gestalten.
-- [ ] Wiederholung von Einzeleffekten mit definierter Pause prüfen.
-- [ ] Tabelle auf genau 50 eindeutige Namen und stabile IDs prüfen.
+- [x] Gemeinsame Lautstärke bei kombinierten Quellen berücksichtigen.
+- [x] Alle markierten Loops über mehrere Zyklen technisch prüfen und Übergänge gestalten.
+- [x] Wiederholung von Einzeleffekten mit definierter Pause prüfen.
+- [x] Tabelle auf genau 50 eindeutige Namen und stabile IDs prüfen.
+
+Alle 50 Abläufe sind technisch auf PAL/NTSC mit 16 KB RAM geprüft. Die subjektive Hörprüfung und Klangabstimmung bleiben offen. Einzelne Pausen innerhalb der Schritt-/Schuss-/Flug-/Knisterzyklen sind beabsichtigt; kein zusätzlicher stummer Tick am Endmarker. Details: [docs/effects.md](docs/effects.md).
 
 ## 4. Auswahldemo
 
