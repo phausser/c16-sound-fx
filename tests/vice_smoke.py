@@ -67,7 +67,12 @@ for standard in ('pal', 'ntsc'):
                      f"${symbols['input_id']:04x} ${symbols['input_id']:04x}",
                      f"break ${symbols['sfx_tick']:04x}", f'ignore 1 ${frames:02x}', 'x',
                      'delete 1',
-                     f'bsave "{prefix}-{key}-ended.bin" 0 $ff0e $ff12']
+                     f'bsave "{prefix}-{key}-ended.bin" 0 $ff0e $ff12',
+                     f'keybuf "{key}\\x0d"', f"until ${symbols['sfx_play']:04x}",
+                     f"until ${symbols['poll']:04x}",
+                     'keybuf "s"', f"until ${symbols['stop']:04x}",
+                     f"until ${symbols['poll']:04x}",
+                     f'bsave "{prefix}-{key}-manual-stop.bin" 0 $ff11 $ff11']
     for effect in (22, 23, 24, 27, 41, 43, 47, 48):
         frames = durations[effect] * 3 + 2
         if standard == 'ntsc':
@@ -144,6 +149,7 @@ for standard in ('pal', 'ntsc'):
         key = f'{effect:02d}'
         playing = Path(f'{prefix}-{key}-playing.bin').read_bytes()
         ended = Path(f'{prefix}-{key}-ended.bin').read_bytes()
+        assert Path(f'{prefix}-{key}-manual-stop.bin').read_bytes() == b'\x00'
         assert playing[3] != 0 and ended[3] == 0, (standard, key)
         assert playing[4] & 0xfc == ended[4] & 0xfc, (standard, key)
         assert Path(f'{prefix}-{key}-input.bin').read_bytes() == bytes([effect])

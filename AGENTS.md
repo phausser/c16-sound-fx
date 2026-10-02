@@ -2,7 +2,7 @@
 
 ## Ziel und Dokumentation
 
-Dieses Projekt entwickelt mit ACME eine C16-Demo mit 50 TED-Soundeffekten und einer separat nutzbaren Spiele-Soundengine. Verbindliche Anforderungen stehen in `SPEC.md`, der Arbeitsplan in `TOOD.md` (Schreibweise beibehalten). Die `README.md` beschreibt den tatsächlichen Stand; geplante Funktionen ausdrücklich als geplant kennzeichnen.
+Dieses Projekt entwickelt mit ACME eine C16-Demo mit 50 TED-Soundeffekten und einer separat nutzbaren Spiele-Soundengine. Verbindliche Anforderungen stehen in `SPEC.md`, der Arbeitsplan in `TODO.md`. Die `README.md` bleibt eine Kurzanleitung für Build, Start und Bedienung. Technischer Stand, Prüfergebnisse und offene Einschränkungen gehören nach `docs/`, insbesondere `docs/status.md` und `docs/engine.md`. Geplante Funktionen ausdrücklich als geplant kennzeichnen.
 
 ## Umsetzung
 
@@ -15,9 +15,21 @@ Dieses Projekt entwickelt mit ACME eine C16-Demo mit 50 TED-Soundeffekten und ei
 - `make` baut; `make run` baut bei Bedarf und startet VICE (`xplus4`) als C16 mit 16 KB RAM, PAL, Sound und PRG-Autostart. Toolpfade über `ACME` und `VICE` überschreibbar halten.
 - Generierte Dateien in `build/` ablegen und nicht versionieren.
 
+## Verbindlicher Menüstand
+
+- Drei Katalogseiten mit 24/24/2 Einträgen; alle 24 Zeilen unter der Kopfzeile für die Liste nutzen, keine Status- oder Fußzeile.
+- Inverse Titelleiste: `C=16 Sound FX`, `Loop: ON/OFF` vor `(H)elp`, rechts `1/3` bis `3/3`.
+- Kategorie in Klammern vor dem Namen; Namen beginnen in Spalte 20 (nullbasiert). Kategorien zusammenhängend sortieren, Fortsetzung über Seitengrenzen zulässig.
+- Reihenfolge nur im Menü ändern; Effekt-IDs und API bleiben 0–49. Jede ID genau einmal anzeigen.
+- H öffnet/schließt die separate Hilfe; RETURN/SPACE kehrt zurück. Auswahl und laufenden Sound erhalten.
+- Hintergrund und Rahmen verwenden `TED_BG_COLOR` aus `src/ted.inc` (aktuell `$36`), Schrift `TED_WHITE` (`$71`). Benutzeränderungen an der Farbe erhalten.
+- Direkte numerische ID-Eingabe bleibt verfügbar, ohne separate Eingabeanzeige.
+- KERNAL-Wiederholung während der Demo sperren und beim Exit zurückgeben. Navigation: 0,5 s Vorlauf, dann 0,1 s Intervall auf PAL und NTSC.
+- Menüfreies Beispiel in `examples/game_integration.asm`; mit `make example` bauen und `make test-example-vice` prüfen.
+
 ## Prüfung
 
-Nach Codeänderungen den ACME-Build und passende Prüfungen ausführen. Änderungen an Wiedergabe oder Menü in VICE mit 16 KB RAM prüfen. Hörprüfungen, Hardwaretests und Laufzeitmessungen nur als bestanden dokumentieren, wenn sie tatsächlich durchgeführt wurden. Aufgaben in `TOOD.md` erst nach erfülltem Ergebnis abhaken.
+Nach Codeänderungen den ACME-Build und passende Prüfungen ausführen. Änderungen an Wiedergabe oder Menü in VICE mit 16 KB RAM prüfen. Hörprüfungen, Hardwaretests und Laufzeitmessungen nur als bestanden dokumentieren, wenn sie tatsächlich durchgeführt wurden. Aufgaben in `TODO.md` erst nach erfülltem Ergebnis abhaken.
 
 ## Git-Commits
 

@@ -4,13 +4,25 @@ PYTHON ?= python3
 VICE_SOUND_DEVICE ?= coreaudio
 VICE_STANDARD ?= pal
 PRG := build/c16-sound-fx.prg
+EXAMPLE := build/game-integration.prg
 SOURCES := $(wildcard src/*.asm src/*.inc)
 
-.PHONY: all run test test-vice record-vice clean
+.PHONY: all run test test-vice record-vice clean example run-example test-example-vice
 all: $(PRG)
 
 $(PRG): $(SOURCES) Makefile | build
 	$(ACME) --format cbm --outfile $@ --symbollist build/symbols.txt --report build/listing.txt src/main.asm
+
+example: $(EXAMPLE)
+
+$(EXAMPLE): examples/game_integration.asm src/sfx_engine.asm src/sfx_data.asm src/ted.inc Makefile | build
+	$(ACME) --format cbm --outfile $@ --symbollist build/example-symbols.txt --report build/example-listing.txt examples/game_integration.asm
+
+run-example: $(EXAMPLE)
+	$(VICE) -default -model c16 -ramsize 16 -$(VICE_STANDARD) -sound -sounddev $(VICE_SOUND_DEVICE) +warp -autostartprgmode 1 -autostart $(EXAMPLE)
+
+test-example-vice: $(EXAMPLE)
+	$(PYTHON) tests/vice_example.py $(VICE)
 
 build:
 	mkdir -p $@

@@ -2,7 +2,7 @@
 
 ## Ziel und Umfang
 
-Ein mit ACME assembliertes Programm für den Commodore 16 zeigt eine Liste mit genau 50 benannten Soundeffekten. Der Benutzer wählt einen Effekt und spielt ihn ab. Die Effekte sind für Spiele gedacht: kurze Geräusche, kurze Tonfolgen und wiederholbare Geräuschzyklen, keine Musikstücke. Diese Spezifikation definiert den Zielumfang; der tatsächliche Umsetzungs- und Prüfstand steht in `README.md`.
+Ein mit ACME assembliertes Programm für den Commodore 16 zeigt eine Liste mit genau 50 benannten Soundeffekten. Der Benutzer wählt einen Effekt und spielt ihn ab. Die Effekte sind für Spiele gedacht: kurze Geräusche, kurze Tonfolgen und wiederholbare Geräuschzyklen, keine Musikstücke. Diese Spezifikation definiert den Zielumfang; der tatsächliche Umsetzungs- und Prüfstand steht in `docs/status.md`.
 
 Zielgerät ist ein unveränderter C16 mit 16 KB RAM, zunächst PAL. C116 und Plus/4 sollen ohne zusätzliche Hardware funktionieren. NTSC wird über eine explizite Zeitbasis und passende Frequenzwerte unterstützt und separat geprüft.
 
@@ -18,8 +18,8 @@ Relevante Register: `$FF0E` (Ton 1, Frequenz unten), `$FF0F` (Ton 2/Rauschen, Fr
 
 - 40 × 25 Zeichen, PETSCII-kompatible Namen ohne Umlaute.
 - Drei Seiten: 24, 24 und 2 Einträge; ein Eintrag pro Zeile mit ID und Name.
-- Inverse Kopfzeile mit `C=16 Sound FX`, Loopstatus `ON/OFF` vor `(H)elp` und rechts Seite `1/3` bis `3/3`; alle 24 Zeilen darunter sind Listeneinträgen vorbehalten, ohne Status- oder Fußzeile. Schwarzer Hintergrund und Rahmen, weiße Schrift.
-- Anzeige nach zusammenhängenden Kategorien sortieren; vor jedem Namen `(KATEGORIE)` zeigen. Kategorien dürfen über Seitenwechsel weiterlaufen. Sortierung verändert die stabilen IDs nicht.
+- Inverse Kopfzeile mit `C=16 Sound FX`, Loopstatus `ON/OFF` vor `(H)elp` und rechts Seite `1/3` bis `3/3`; alle 24 Zeilen darunter sind Listeneinträgen vorbehalten, ohne Status- oder Fußzeile. Hintergrund und Rahmen verwenden den konfigurierbaren Wert `TED_BG_COLOR` (aktuell `$36`), weiße Schrift (`$71`).
+- Anzeige nach zusammenhängenden Kategorien sortieren; vor jedem Namen `(KATEGORIE)` zeigen; Namen beginnen in Spalte 20 (nullbasiert). Kategorien dürfen über Seitenwechsel weiterlaufen. Sortierung verändert die stabilen IDs nicht.
 - Separate Hilfeseite mit allen Tastaturbefehlen: H öffnet/schließt sie; RETURN/SPACE kehrt zum Katalog zurück. Auswahl und laufende Wiedergabe bleiben erhalten. Navigation und ID-Eingabe sind auf der Hilfeseite gesperrt; Loop, Stop, Videostandardwechsel und Exit bleiben verfügbar.
 - Cursor hoch/runter: Auswahl; links/rechts: Seite. Auswahlgrenzen werden begrenzt, kein unbeabsichtigtes Umspringen.
 - RETURN oder SPACE: ausgewählten Effekt starten beziehungsweise von vorn starten.
@@ -107,7 +107,7 @@ PAL ist die Referenz mit 50 logischen Ticks/s. Unter NTSC läuft die Engine weit
 
 ## Dateien, Build und Speicher
 
-Geplant: `src/main.asm`, `src/menu.asm`, `src/sfx_engine.asm`, `src/sfx_data.asm`, `src/ted.inc`, `examples/game_integration.asm`, `Makefile`, `README.md` und `build/c16-sound-fx.prg`.
+Vorhanden: `src/main.asm`, `src/menu.asm`, `src/sfx_engine.asm`, `src/sfx_data.asm`, `src/ted.inc`, `examples/game_integration.asm`, `Makefile`, `README.md` und `build/c16-sound-fx.prg`.
 
 `make` baut das PRG mit ACME. `make run` baut es bei Bedarf und startet es anschließend automatisch in VICE (`xplus4`) mit aktiviertem Sound, C16-Modell, 16 KB RAM und PAL als Standard. Der BASIC-Startstub wird per Autostart ausgeführt. Die installierten Programme wurden unter `/opt/homebrew/bin/acme` und `/opt/homebrew/bin/xplus4` gefunden. Das Makefile verwendet standardmäßig die Befehle aus dem PATH und erlaubt Overrides über `ACME` und `VICE`. Die passenden VICE-Optionen werden bei der Umsetzung anhand der installierten Version geprüft.
 
@@ -125,7 +125,7 @@ ACME erzeugt ein CBM-PRG mit BASIC-SYS-Startstub ab `$1001`. Die tatsächliche S
 7. Keine Bildbeschädigung durch Soundregisterzugriffe, keine Speicherüberschreitung.
 8. Engine ist unabhängig vom Menü in ein kleines Beispielspiel integrierbar.
 9. Emulatorprüfung mit 16 KB RAM und Hörprüfung aller 50 Effekte; NTSC separat. Prüfung auf echter Hardware ist wünschenswert und wird nur bei tatsächlicher Durchführung als bestanden ausgewiesen.
-10. Gemessene RAM-Nutzung und maximale Tick-Laufzeit werden im README festgehalten. Ziel für `sfx_tick`: höchstens 1.000 CPU-Zyklen pro Aufruf, ohne Menü und IRQ-Verwaltung; am langsameren CPU-Takt bewerten.
+10. Gemessene RAM-Nutzung und maximale Tick-Laufzeit werden in `docs/engine.md` festgehalten. Ziel für `sfx_tick`: höchstens 1.000 CPU-Zyklen pro Aufruf, ohne Menü und IRQ-Verwaltung; am langsameren CPU-Takt bewerten.
 
 ## Technische Referenzen
 

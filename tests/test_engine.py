@@ -79,6 +79,12 @@ for ntsc in (0, 1):
         assert e.state("sfx_active") == 1
         e.ticks(1)
         assert e.state("sfx_active") == 0 and e.mem[0xff11] == 0
+        e.call("sfx_play", effect)
+        e.call("sfx_set_loop", 1)
+        e.call("sfx_stop")
+        assert not e.state("sfx_active") and not e.state("sfx_loop")
+        e.ticks(frames + 2)
+        assert e.mem[0xff11] == 0
         e.call("sfx_shutdown")
         assert e.mem[0xff0e:0xff13] == e.saved
 

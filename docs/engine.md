@@ -40,3 +40,20 @@ Offen bleiben Hörprüfung und Klangabstimmung, echte Hardware sowie die manuell
 Die Tick-Zykluszahl hängt auch von der Linkadresse ab (Seitenübertritte bei
 6502-Zweigen und Tabellenzugriffen). Beim aktuellen Kategorie-/Hilfemenü liegt der höchste getestete Wert
 bei 332 Zyklen (vorheriger Menüstand: 342); die Engine selbst ist unverändert.
+
+## Menüfreies Integrationsbeispiel
+
+`make example` baut `examples/game_integration.asm` zu
+`build/game-integration.prg`; `make run-example` startet es mit denselben
+16-KB-C16-, Sound- und PAL/NTSC-Optionen wie die Katalogdemo.
+Es bindet ausschließlich `ted.inc`, `sfx_engine.asm` und `sfx_data.asm` ein;
+kein Menücode. Ein Spielerzeichen bewegt sich frameweise unabhängig von
+Soundereignissen. SPACE startet Sprung (15), F Schuss (25), C Sammeln (5),
+L Motorloop (41), S/RUN-STOP stoppt, Q gibt Sound und KERNAL-Wiederholung
+zurück. P/N wählt die passende Zeitbasis.
+
+Nutzlast: 4607 Bytes (`$1001–$21FF`), inklusive
+vollständigem Katalog. `make test-example-vice` prüft auf PAL und NTSC mit
+16 KB drei Ereignisstarts und natürliche Enden, fortgesetzte Spielbewegung
+während des Motorloops, Stop sowie Rückkehr in BASIC. Frequenz-/Zeittests
+für den vollständigen Katalog bleiben Bestandteil von `make test`.
