@@ -6,7 +6,9 @@ Der C16 erzeugt seinen Sound mit dem TED: zwei Rechteck-Tonkanäle und ein Rausc
 
 ## Aktueller Stand
 
-Schritt 1 ist implementiert: ACME baut eine minimale Startdemo mit BASIC-SYS-Stub und Speicherprüfungen. VICE bestätigt den PRG-Autostart auf dem C16 mit 16 KB RAM und PAL. Die Startdemo zeigt einen Hinweis und sieht Q zur Rückkehr nach BASIC vor; Anzeige und Q sind noch nicht visuell geprüft. Soundengine und 50-Effekt-Menü folgen. Prüfergebnisse und Hardwaregrundlage stehen in [docs/hardware.md](docs/hardware.md).
+Build und nicht blockierende Soundengine sind implementiert. Die Demo spielt vier Prototypen: `jingle-win`, `landing`, `blaster-shot` und `alarm`. Die übrigen 46 IDs sind vorläufig stumm; vollständiger Katalog und Auswahlmenü folgen. ACME-Build und automatisierte Engine- sowie VICE-Prüfungen auf PAL/NTSC mit 16 KB RAM bestehen. Hörprüfung und visuelle Grafikprüfung sind offen.
+
+Die Prototypdemo belegt 1412 Bytes; die Engine mit Tabellen und Prototypdaten 1071 Bytes, ohne Zero Page. Der höchste getestete Tick benötigt 292 CPU-Zyklen. API, Einbindung und Messgrenzen: [docs/engine.md](docs/engine.md). Hardwaregrundlage: [docs/hardware.md](docs/hardware.md).
 
 - [SPEC.md](SPEC.md): Anforderungen, vollständiger Katalog der 50 Effekte, API und Abnahme.
 - [TOOD.md](TOOD.md): Umsetzungsschritte und Prüfungen.
@@ -30,6 +32,31 @@ Andere Toolpfade sind über Make-Variablen auswählbar:
 ```sh
 make run ACME=/pfad/zu/acme VICE=/pfad/zu/xplus4
 ```
+
+## Prototypdemo bedienen
+
+| Taste | Aktion |
+|---|---|
+| 1–4 | Win, Landing, Blaster oder Alarm starten/neustarten |
+| L | Wiederholung umschalten |
+| S | Wiedergabe und Wiederholung stoppen |
+| Q | Ressourcen freigeben und nach BASIC zurückkehren |
+| P / N | PAL / NTSC wählen; muss zum Emulator passen, stoppt Wiedergabe |
+
+Die Demo startet mit PAL und Wiederholung aus. Für NTSC: `make run VICE_STANDARD=ntsc`, anschließend N drücken. Ein anderer Audiotreiber ist über `VICE_SOUND_DEVICE` wählbar. Aktionsentprellung folgt mit dem Menü.
+
+## Automatisierte Prüfung
+
+Für die CPU-Tests wird py65 benötigt; der VICE-Test benötigt nur Python und xplus4:
+
+```sh
+python3 -m venv /private/tmp/c16-engine-test
+/private/tmp/c16-engine-test/bin/python -m pip install -r tests/requirements.txt
+make test PYTHON=/private/tmp/c16-engine-test/bin/python
+make test-vice
+```
+
+`make test-vice` verwendet den Dummy-Audiotreiber; es prüft Bildschirmtext, Prototypstarts und -ende sowie die Rückkehr nach BASIC, ohne Hörprüfung.
 
 ## Geplante Bedienung
 

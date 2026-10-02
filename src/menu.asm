@@ -1,4 +1,4 @@
-; Step 1 startup screen only. Full selection menu follows in step 4.
+; Prototype controls only. Full selection menu follows in step 4.
 menu_init:
     lda #$93                  ; clear through KERNAL, preserve video setup
     jsr KERNAL_CHROUT
@@ -18,8 +18,10 @@ menu_init:
     rts
 startup_text:
     !pet "C16 SOUND FX",13,13
-    !pet "STEP 1: BUILD AND START OK",13
-    !pet "16 KB RAM / PAL",13,13
-    !pet "SOUND ENGINE FOLLOWS IN STEP 2",13
-    !pet "Q: RETURN TO BASIC",13,0
+    !pet "STEP 2: SOUND ENGINE PROTOTYPES",13,13
+    !pet "1 WIN      2 LANDING",13
+    !pet "3 BLASTER  4 ALARM",13,13
+    !pet "L LOOP     S STOP     Q BASIC",13
+    !pet "P PAL      N NTSC (MATCH EMULATOR)",13
+    !pet "DEFAULT: PAL / LOOP OFF",13,0
 !if * - startup_text > 255 { !error "Startup text exceeds index range" }

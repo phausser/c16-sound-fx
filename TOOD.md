@@ -12,18 +12,20 @@ Dateiname `TOOD.md` wie angefordert. Anforderungen und Effekt-IDs stehen in `SPE
 - [ ] `make run` implementieren: bei Bedarf bauen und anschließend in VICE mit hörbarer Audioausgabe automatisch starten; `ACME` und `VICE` als überschreibbare Make-Variablen vorsehen.
 - [x] Speichergrenzen und Überschneidungen als Build-Checks absichern.
 
-Implementierung von `make run` vorhanden; VICE bestätigt Autostart und geöffnetes CoreAudio-Gerät. Sichtprüfung, Q und spätere Hörprüfung bleiben offen. Details: [docs/hardware.md](docs/hardware.md).
+Implementierung von `make run` vorhanden; VICE bestätigt Autostart und geöffnetes CoreAudio-Gerät. Q-Rückkehr ist inzwischen per Monitor geprüft; visuelle Grafikprüfung und Hörprüfung bleiben offen. Details: [docs/hardware.md](docs/hardware.md).
 
 ## 2. Wiederverwendbare Soundengine
 
-- [ ] API einschließlich Init-Parameter für PAL/NTSC, Registerzerstörung und Zero-Page-Nutzung festlegen.
-- [ ] Sichere TED-Registerzugriffe implementieren, besonders fremde Bits in `$FF12` erhalten.
-- [ ] Schrittformat, Endmarker und Loop-Einstieg definieren.
-- [ ] `sfx_init`, `sfx_play`, `sfx_tick`, `sfx_stop`, `sfx_set_loop` und `sfx_shutdown` implementieren.
-- [ ] PAL-Takt und NTSC-Zeitumsetzung sowie passende Frequenzwerte implementieren.
-- [ ] Ungültige IDs, Neustart, natürliches Ende und Stop verifizieren.
+- [x] API einschließlich Init-Parameter für PAL/NTSC, Registerzerstörung und Zero-Page-Nutzung festlegen.
+- [x] Sichere TED-Registerzugriffe implementieren, besonders fremde Bits in `$FF12` erhalten.
+- [x] Schrittformat, Endmarker und Loop-Einstieg definieren.
+- [x] `sfx_init`, `sfx_play`, `sfx_tick`, `sfx_stop`, `sfx_set_loop` und `sfx_shutdown` implementieren.
+- [x] PAL-Takt und NTSC-Zeitumsetzung sowie passende Frequenzwerte implementieren.
+- [x] Ungültige IDs, Neustart, natürliches Ende und Stop verifizieren.
 - [ ] Erst je einen Ton-, Rausch-, Kombinations- und Tonfolgen-Prototyp hörbar prüfen.
-- [ ] Maximale Tick-Laufzeit und Engine-RAM messen; bei Bedarf Datenformat vereinfachen.
+- [x] Maximale Tick-Laufzeit und Engine-RAM messen; bei Bedarf Datenformat vereinfachen.
+
+Engine und vier Prototypen implementiert; CPU-Tests und VICE-Monitortests auf PAL/NTSC bestehen. Höchster getesteter Tick: 292 CPU-Zyklen. Hörprüfung offen. API, RAM und Grenzen: [docs/engine.md](docs/engine.md).
 
 ## 3. 50 Effekte gestalten
 

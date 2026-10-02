@@ -26,4 +26,4 @@ Die abschließende Gegenprüfung der Systembereiche mit dem [Commodore-Handbuch]
 - ACME 0.97: Build erfolgreich. PRG-Nutzlast 158 Bytes, `$1001–$109E`; Entry `$100D` / SYS 4109; Dateigröße 160 Bytes einschließlich Ladeadresse.
 - Assembler prüft Programmende, Bildschirm-/Attributüberschneidung und vierstellige SYS-Adresse; ein zu großes Programm bricht den Build ab.
 - VICE 3.10: Optionen über lokale `-help` geprüft. Startprotokoll bestätigt RAM-Injektion ab `$1001`, Programmstart und Autostart-Abschluss. CoreAudio öffnet die MacBook-Lautsprecher mit 48000 Hz.
-- Sichtprüfung der Anzeige und Q-Rückkehr noch offen: Das native VICE-Fenster ist über die verfügbare UI-Steuerung nicht zugänglich. Keine Hörprüfung: Diese Startdemo erzeugt noch keinen Ton.
+- Historischer Stand von Schritt 1: Sichtprüfung und Q waren offen; die damalige Startdemo erzeugte keinen Ton. Schritt 2 bestätigt Q-Rückkehr per VICE-Monitor; aktuelle Ergebnisse und verbleibende Grafik-/Hörprüfung siehe [engine.md](engine.md).
