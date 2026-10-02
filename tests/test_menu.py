@@ -7,6 +7,7 @@ root = Path(__file__).resolve().parents[1]
 symbols = {n: int(v, 16) for n, v in re.findall(
     r'^\s*(\w+)\s*=\s*\$([0-9a-f]+)',
     (root / 'build/symbols.txt').read_text(), re.M)}
+COUNT = symbols["SFX_COUNT"]
 prg = (root / 'build/c16-sound-fx.prg').read_bytes()
 
 for ntsc, delay, interval in ((0, 25, 5), (1, 30, 6)):
@@ -30,9 +31,9 @@ for ntsc, delay, interval in ((0, 25, 5), (1, 30, 6)):
     def state(name):
         return cpu.memory[symbols[name]]
 
-    order = cpu.memory[symbols['menu_order']:symbols['menu_order'] + 50]
-    categories = cpu.memory[symbols['menu_categories']:symbols['menu_categories'] + 50]
-    assert sorted(order) == list(range(50))
+    order = cpu.memory[symbols['menu_order']:symbols['menu_order'] + COUNT]
+    categories = cpu.memory[symbols['menu_categories']:symbols['menu_categories'] + COUNT]
+    assert sorted(order) == list(range(COUNT))
     assert categories == sorted(categories)
     call('menu_draw')
     assert all(b & 0x80 for b in cpu.memory[0x0c00:0x0c28])
@@ -114,10 +115,10 @@ for ntsc, delay, interval in ((0, 25, 5), (1, 30, 6)):
     for key in (ord('L'), ord('S'), 13, 32):
         call('menu_key', key)
         assert cpu.a == key and state('menu_held_key') == 0
-    for _ in range(60):
+    for _ in range(COUNT + 10):
         call('menu_key', 0x11)
-    assert state('menu_selected') == 49
-    for _ in range(60):
+    assert state('menu_selected') == COUNT-1
+    for _ in range(COUNT + 10):
         call('menu_key', 0x91)
     assert state('menu_selected') == 0
     # Held RUN/STOP uses the public KERNAL API, independent of GETIN buffering.
@@ -128,6 +129,6 @@ for ntsc, delay, interval in ((0, 25, 5), (1, 30, 6)):
     call('menu_shutdown')
     assert cpu.memory[0x0540] == 0x80
 
-print('Menu checks passed: 50 categorized selected starts, inverse header/help, '
+print('Menu checks passed: 70 categorized selected starts, inverse header/help, '
       'PAL/NTSC held navigation, release, bounds, '
       'live-loop isolation, STOP, repeat-setting restoration')

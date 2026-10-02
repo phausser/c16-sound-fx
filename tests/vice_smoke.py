@@ -22,8 +22,10 @@ record = args.record
 prg = (BUILD / 'c16-sound-fx.prg').read_bytes()
 load = int.from_bytes(prg[:2], 'little')
 offset = 2 + symbols['sfx_durations'] - load
-durations = prg[offset:offset + 50]
+durations = prg[offset:offset + symbols["SFX_COUNT"]]
 
+flag_offset = 2 + symbols['sfx_flags'] - load
+loop_ids = [i for i in range(symbols['SFX_COUNT']) if prg[flag_offset + i] & 1]
 for standard in ('pal', 'ntsc'):
     prefix = BUILD / f'vice-{standard}'
     commands = ['delete 1', f'bsave "{prefix}-repeat.bin" 0 $0540 $0540',
@@ -55,7 +57,7 @@ for standard in ('pal', 'ntsc'):
                  'keybuf "h"', f"until ${symbols['menu_draw']:04x}",
                  f"until ${symbols['poll']:04x}"]
     # All catalog IDs are entered through the actual demo's numeric input.
-    for effect in range(50):
+    for effect in range(symbols["SFX_COUNT"]):
         key = f'{effect:02d}'
         frames = durations[effect] + 2
         if standard == 'ntsc':
@@ -73,7 +75,7 @@ for standard in ('pal', 'ntsc'):
                      'keybuf "s"', f"until ${symbols['stop']:04x}",
                      f"until ${symbols['poll']:04x}",
                      f'bsave "{prefix}-{key}-manual-stop.bin" 0 $ff11 $ff11']
-    for effect in (22, 23, 24, 27, 41, 43, 47, 48):
+    for effect in loop_ids:
         frames = durations[effect] * 3 + 2
         if standard == 'ntsc':
             frames = (frames * 6 + 4) // 5
@@ -130,7 +132,7 @@ for standard in ('pal', 'ntsc'):
     assert 'C=16 SOUND FX' in decoded
     assert 'LOOP: OFF' in decoded[:40] and '(H)ELP' in decoded[:40]
     assert 'STATUS:' not in decoded
-    assert '19 (BEWEGUNG)' in decoded[24 * 40:25 * 40]
+    assert '45 (SIGNAL)' in decoded[24 * 40:25 * 40]
     assert all(b & 0x80 for b in screen[:40])
     assert '(JINGLE)' in decoded and '(SAMMELN)' in decoded
     assert 'CURSOR: SELECT/PAGE' not in decoded
@@ -139,13 +141,13 @@ for standard in ('pal', 'ntsc'):
                         else chr(b & 0x7f) for b in help_data)
     assert 'CURSOR UP/DOWN' in help_text and 'RUN-STOP' in help_text
     assert all(b & 0x80 for b in help_data[:40])
-    for page, first in ((1, '00 (JINGLE)'), (2, '20 (BEWEGUNG)'), (3, '35 (KAMPF)')):
+    for page, first in ((1, '00 (JINGLE)'), (2, '57 (SIGNAL)'), (3, '53 (OBJEKT)')):
         data = Path(f'{prefix}-page{page}.bin').read_bytes()
         content = ''.join(chr((b & 0x7f) + 64) if (b & 0x7f) < 32 else chr(b & 0x7f) for b in data)
         assert first in content, (standard, page, content)
         assert data[37] == ord(str(page)) | 0x80
     assert 'ERROR' not in text and 'not a valid checkpoint' not in text
-    for effect in range(50):
+    for effect in range(symbols["SFX_COUNT"]):
         key = f'{effect:02d}'
         playing = Path(f'{prefix}-{key}-playing.bin').read_bytes()
         ended = Path(f'{prefix}-{key}-ended.bin').read_bytes()
@@ -153,7 +155,7 @@ for standard in ('pal', 'ntsc'):
         assert playing[3] != 0 and ended[3] == 0, (standard, key)
         assert playing[4] & 0xfc == ended[4] & 0xfc, (standard, key)
         assert Path(f'{prefix}-{key}-input.bin').read_bytes() == bytes([effect])
-    for effect in (22, 23, 24, 27, 41, 43, 47, 48):
+    for effect in loop_ids:
         state = Path(f'{prefix}-{effect:02d}-loop.bin').read_bytes()
         assert state[0] == 1 and state[1] == 1 and state[3] == 0
         navigated = Path(f'{prefix}-{effect:02d}-navigated.bin').read_bytes()
@@ -181,5 +183,5 @@ for standard in ('pal', 'ntsc'):
         with wave.open(str(prefix.with_suffix('.wav'))) as finalized:
             assert finalized.getnframes() == len(pcm) // (channels * 2)
         print(f'WAV: {prefix.with_suffix(".wav")} ({len(pcm) / (channels * 2 * rate):.2f} s)')
-    print(f'VICE {standard.upper()}: 50 effect starts/ends, 8 loops/stops, screen text, '
+    print(f'VICE {standard.upper()}: 70 effect starts/ends/stops, 10 loops/stops, screen text, '
           f'Q return to BASIC (${final_pc:04X}) passed')

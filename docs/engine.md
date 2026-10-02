@@ -9,13 +9,13 @@ Einmal `sfx_init` vor der ersten Nutzung, dann `sfx_tick` exakt einmal pro Video
 | Routine | Eingabe und Verhalten |
 |---|---|
 | `sfx_init` | A=0 PAL, A=1 NTSC; sichert Register und schaltet Sound aus; andere Werte: C=1, unverändert |
-| `sfx_play` | A=ID 0–49; ersetzt Wiedergabe und setzt sofort den ersten Schritt; C=0; andere IDs: C=1, unverändert |
+| `sfx_play` | A=ID 0–69; ersetzt Wiedergabe und setzt sofort den ersten Schritt; C=0; andere IDs: C=1, unverändert |
 | `sfx_tick` | Ein Aufruf pro Frame; höchstens ein hörbarer Schrittwechsel; Carry ohne Bedeutung |
 | `sfx_stop` | Sound aus, Wiedergabe und Wiederholung verworfen |
 | `sfx_set_loop` | A=0/1, C=0; Abschalten beendet den aktuellen Durchlauf regulär; andere Werte: C=1, unverändert |
 | `sfx_shutdown` | Stoppt, stellt gesicherte Frequenzen und Soundsteuerung wieder her; aktuelle fremde Registerbits bleiben erhalten |
 
-Alle Aufrufe dürfen A/X/Y und Statusflags zerstören. Der Aufrufer hält den Dezimalmodus ausgeschaltet (`CLD`). Die Routinen lassen Stack und Interruptfreigabe unverändert. Maximal 6 Stackbytes einschließlich der Rücksprungadresse des API-Aufrufs, ohne einen unterbrechenden IRQ. Die Engine schreibt nur `$FF0E–$FF12`, eigene Zustandsbytes und zwei Operandbytes. Bei `$FF12` bleiben Bits 2–7 aus dem aktuellen Wert erhalten, bei `$FF10` Bits 2–7 ebenfalls. Shutdown darf zuvor aktive Soundquellen des Aufrufers wiederherstellen.
+Alle Aufrufe dürfen A/X/Y und Statusflags zerstören. Der Aufrufer hält den Dezimalmodus ausgeschaltet (`CLD`). Die Routinen lassen Stack und Interruptfreigabe unverändert. Maximal 6 Stackbytes einschließlich der Rücksprungadresse des API-Aufrufs, ohne einen unterbrechenden IRQ. Die Engine schreibt nur `$FF0E–$FF12`, eigene Zustandsbytes und vier Operandbytes. Bei `$FF12` bleiben Bits 2–7 aus dem aktuellen Wert erhalten, bei `$FF10` Bits 2–7 ebenfalls. Shutdown darf zuvor aktive Soundquellen des Aufrufers wiederherstellen.
 
 ## Daten und Wiederholung
 
@@ -25,15 +25,15 @@ Jeder ID-Eintrag enthält zwei 16-Bit-Adressen: Start und Wiederholungseinstieg.
 
 PAL: jeder Frame ist ein logischer Tick. NTSC: ein Akkumulator addiert 50 je Frame und erzeugt bei mindestens 60 einen Tick; pro 60 Aufrufen entstehen 50 logische Ticks. Die Phase läuft unabhängig von der Wiedergabe weiter. Frequenzdaten liegen separat für PAL und NTSC vor und werden mit gerundeten Konstanten 110840 bzw. 111861 aus der dokumentierten TED-Formel erzeugt.
 
-Alle 50 stabilen IDs haben eigene, nicht leere Abläufe; Namen, Dauern und Loopflags werden gegen `SPEC.md` geprüft. Der Katalog enthält 208 Schritte, beide Taktvarianten und 50 PETSCII-Namen samt Zeigertabelle. Details: [effects.md](effects.md).
+Alle 70 stabilen IDs haben eigene, nicht leere Abläufe; Namen, Dauern und Loopflags werden gegen `SPEC.md` geprüft. Der Katalog enthält 329 Schritte, beide Taktvarianten und 70 PETSCII-Namen samt Zeigertabelle. Details: [effects.md](effects.md).
 
 ## Prüfungen und Grenzen
 
-`make test` führt mit py65 1.2.0 den wirklich assemblierten 6502-Code aus. Geprüft: alle 50 gültigen Slots, ungültige IDs/Init-/Loop-Werte ohne Zustandsänderung, Neustart, exakte PAL-/NTSC-Dauern, Stop, Loop-Abschaltung, 200-ms-Pause, unterbrechungsfreie Alarmzyklen, separater Wiederholungseinstieg, Daten über eine Seitengrenze, Schreibbereiche und aktuelle fremde Registerbits auch beim Shutdown.
+`make test` führt mit py65 1.2.0 den wirklich assemblierten 6502-Code aus. Geprüft: alle 70 gültigen Slots, ungültige IDs/Init-/Loop-Werte ohne Zustandsänderung, Neustart, exakte PAL-/NTSC-Dauern, Stop, Loop-Abschaltung, 200-ms-Pause, unterbrechungsfreie Alarmzyklen, separater Wiederholungseinstieg, Daten über eine Seitengrenze, Schreibbereiche und aktuelle fremde Registerbits auch beim Shutdown.
 
-Gemessen am aktuellen Build: maximal **332 CPU-Zyklen pro getesteten Tick**, inklusive API-RTS; 501 Bytes Enginecode (einschließlich zwei veränderlicher Operandbytes), 20 Bytes zusätzlicher Zustand, 3748 Bytes Katalogdaten, Tabellen und Namen. Engine samt Daten: 4269 Bytes; Zero Page: 0 Bytes. Die Katalogdemo belegt 6543 Bytes ab `$1001` bis `$298F`; PRG inklusive Ladeadresse: 6545 Bytes. Die Zyklusmessung zählt CPU-Instruktionszyklen, keine TED-DMA-Verzögerungen oder IRQ-Arbeit; sie ist keine Hardware-Wallclockmessung.
+Gemessen am aktuellen Build: maximal **332 CPU-Zyklen pro getesteten Tick**, inklusive API-RTS; 512 Bytes Enginecode (einschließlich vier veränderlicher Operandbytes), 20 Bytes zusätzlicher Zustand, 5748 Bytes Katalogdaten, Tabellen und Namen. Engine samt Daten: 6280 Bytes; Zero Page: 0 Bytes. Die Katalogdemo belegt 8594 Bytes ab `$1001` bis `$3192`; PRG inklusive Ladeadresse: 8596 Bytes. Die Zyklusmessung zählt CPU-Instruktionszyklen, keine TED-DMA-Verzögerungen oder IRQ-Arbeit; sie ist keine Hardware-Wallclockmessung.
 
-`make test-vice` prüft VICE 3.10 mit C16, 16 KB RAM, jeweils PAL und NTSC: Autostart, Bildschirmtext im echten Bildschirm-RAM, alle 50 Starts per KERNAL-Tastaturpuffer, automatisches Ende, acht Loops mit Stop, numerische ID-Eingabe und Erhaltung der Videobits und Q-Rückkehr in den BASIC-ROM-Code bei `$A7CF`. Der Test benutzt den Dummy-Audiotreiber und ersetzt keine Hörprüfung. Monitorbefehle folgen dem [VICE-Monitorhandbuch](https://vice-emu.sourceforge.io/vice_12.html). Logs und Registeraufnahmen liegen unter `build/`.
+`make test-vice` prüft VICE 3.10 mit C16, 16 KB RAM, jeweils PAL und NTSC: Autostart, Bildschirmtext im echten Bildschirm-RAM, alle 70 Starts per KERNAL-Tastaturpuffer, automatisches Ende, zehn Loops mit Stop, numerische ID-Eingabe und Erhaltung der Videobits und Q-Rückkehr in den BASIC-ROM-Code bei `$A7CF`. Der Test benutzt den Dummy-Audiotreiber und ersetzt keine Hörprüfung. Monitorbefehle folgen dem [VICE-Monitorhandbuch](https://vice-emu.sourceforge.io/vice_12.html). Logs und Registeraufnahmen liegen unter `build/`.
 
 Offen bleiben Hörprüfung und Klangabstimmung, echte Hardware sowie die manuelle Bedienprüfung mit gehaltenen Host-Tasten. Die Demo deaktiviert die KERNAL-Wiederholung während der Nutzung und steuert Cursortastenwiederholung selbst. CPU-Tests prüfen die Wiederholungsintervalle auf PAL/NTSC; VICE prüft Kategorienseiten, separate Hilfe und Navigation während Loops. Katalog und Hilfe sind per Screenshot visuell geprüft.
 
@@ -52,8 +52,14 @@ Soundereignissen. SPACE startet Sprung (15), F Schuss (25), C Sammeln (5),
 L Motorloop (41), S/RUN-STOP stoppt, Q gibt Sound und KERNAL-Wiederholung
 zurück. P/N wählt die passende Zeitbasis.
 
-Nutzlast: 4607 Bytes (`$1001–$21FF`), inklusive
+Nutzlast: 6618 Bytes (`$1001–$29DA`), inklusive
 vollständigem Katalog. `make test-example-vice` prüft auf PAL und NTSC mit
 16 KB drei Ereignisstarts und natürliche Enden, fortgesetzte Spielbewegung
 während des Motorloops, Stop sowie Rückkehr in BASIC. Frequenz-/Zeittests
 für den vollständigen Katalog bleiben Bestandteil von `make test`.
+
+Die Erweiterung 50–69 ergänzt sieben C64-, sechs Amiga- und sieben neuere
+Spielvorbilder. Die alte Starttabelle bleibt als Vier-Byte-Einträge erhalten;
+`sfx_lookup` berücksichtigt den neunten Indexbit für IDs ab 64. Auch dessen
+zwei Operandbytes sind private, beschreibbare Enginebytes. Prüfungen und
+Gestaltungsgrenzen: [game-inspired.md](game-inspired.md).

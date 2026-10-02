@@ -28,3 +28,6 @@ KERNAL_KEY_SCAN = $c6           ; matrix index, $40 means released
 KERNAL_SHIFT = $0543
 KERNAL_REPEAT = $0540          ; bit 6 disables all KERNAL key repeat
 KERNAL_STOP = $ffe1
+
+SFX_COUNT = 70                 ; original 0-49 plus game-inspired 50-69
+!if SFX_COUNT > 128 { !error "Catalog lookup supports at most 128 entries" }

@@ -327,6 +327,167 @@
     +step 1, 350, 1500, $54, .clock
     +step 5, 110, 800, $42, .clock
     !byte 0
+.fx50: ; 50: im-robot, 7 ticks; Impossible Mission: Roboterlaser
+    +step 1, 2100, 110, $16, .clock
+    +step 1, 1700, 110, $16, .clock
+    +step 1, 1300, 110, $15, .clock
+    +step 1, 950, 110, $15, .clock
+    +step 1, 700, 110, $14, .clock
+    +step 2, 450, 110, $12, .clock
+    !byte 0
+.fx51: ; 51: boulder-diamond, 3 ticks; pickup contour from SID analysis
+    +step 1, 320, 110, $14, .clock
+    +step 1, 320, 110, $12, .clock
+    +step 1, 320, 110, $11, .clock
+    !byte 0
+.fx52: ; 52: uridium-laser, 7 ticks; Uridium: Laserschuss
+    +step 1, 3200, 110, $16, .clock
+    +step 1, 2400, 110, $15, .clock
+    +step 1, 1800, 110, $15, .clock
+    +step 1, 1200, 110, $14, .clock
+    +step 1, 800, 110, $13, .clock
+    +step 2, 400, 110, $11, .clock
+    !byte 0
+.fx53: ; 53: paradroid-link, 13 ticks; Paradroid: Transfer
+    +step 2, 330, 660, $34, .clock
+    +step 2, 440, 880, $35, .clock
+    +step 2, 660, 1320, $35, .clock
+    +step 2, 440, 880, $34, .clock
+    +step 2, 880, 1760, $34, .clock
+    +step 3, 1320, 2640, $32, .clock
+    !byte 0
+.fx54: ; 54: wizball-pickup, 13 ticks; Wizball: Pickup
+    +step 2, 440, 447, $34, .clock
+    +step 2, 660, 669, $35, .clock
+    +step 2, 880, 891, $35, .clock
+    +step 2, 1320, 1335, $34, .clock
+    +step 2, 1760, 1778, $33, .clock
+    +step 3, 2200, 2221, $31, .clock
+    !byte 0
+.fx55: ; 55: karate-punch, 8 ticks; International Karate: Treffer
+    +step 1, 220, 1800, $57, .clock
+    +step 2, 150, 650, $56, .clock
+    +step 2, 120, 300, $54, .clock
+    +step 3, 110, 160, $41, .clock
+    !byte 0
+.fx56: ; 56: ninja-shuriken, 8 ticks; The Last Ninja: Shuriken
+    +step 1, 1700, 3200, $54, .clock
+    +step 2, 1200, 2400, $55, .clock
+    +step 2, 800, 1600, $53, .clock
+    +step 3, 500, 900, $51, .clock
+    !byte 0
+.fx57: ; 57: lemmings-ohno, 29 ticks; Lemmings: Oh no
+    +step 4, 620, 1240, $34, .clock
+    +step 3, 580, 1160, $35, .clock
+    +step 3, 530, 1060, $33, .clock
+    +step 2, 110, 110, $00, .clock
+    +step 3, 820, 1640, $35, .clock
+    +step 4, 700, 1400, $35, .clock
+    +step 5, 560, 1120, $34, .clock
+    +step 5, 420, 840, $32, .clock
+    !byte 0
+.fx58: ; 58: worms-bazooka, 25 ticks; Worms: Bazooka
+    +step 2, 180, 1600, $57, .clock
+    +step 3, 240, 2000, $55, .clock
+    +step 3, 330, 1500, $53, .clock
+    +step 3, 440, 900, $52, .clock
+    +step 2, 110, 110, $00, .clock
+    +step 2, 120, 650, $57, .clock
+    +step 4, 110, 350, $45, .clock
+    +step 6, 110, 180, $42, .clock
+    !byte 0
+.fx59: ; 59: turrican-beam, 12 ticks; Turrican II: Strahl
+    +step 2, 440, 2200, $54, .clock
+    +step 2, 660, 2800, $55, .clock
+    +step 2, 880, 3400, $54, .clock
+    +step 2, 660, 2800, $53, .clock
+    +step 2, 440, 2200, $54, .clock
+    +step 2, 550, 2500, $55, .clock
+    !byte 0
+.fx60: ; 60: pinball-bumper, 10 ticks; Pinball Dreams: Bumper
+    +step 1, 330, 337, $36, .clock
+    +step 2, 660, 671, $35, .clock
+    +step 2, 880, 894, $34, .clock
+    +step 2, 660, 671, $33, .clock
+    +step 3, 440, 447, $31, .clock
+    !byte 0
+.fx61: ; 61: alienbreed-door, 18 ticks; Alien Breed: Tuer
+    +step 2, 140, 400, $53, .clock
+    +step 3, 180, 600, $54, .clock
+    +step 3, 240, 900, $55, .clock
+    +step 3, 330, 1300, $54, .clock
+    +step 3, 440, 1700, $53, .clock
+    +step 4, 660, 2200, $51, .clock
+    !byte 0
+.fx62: ; 62: lotus-engine, 12 ticks; Lotus Turbo Challenge 2: Motor
+    +step 2, 130, 260, $34, .clock
+    +step 2, 138, 276, $35, .clock
+    +step 2, 146, 292, $34, .clock
+    +step 2, 155, 310, $35, .clock
+    +step 2, 146, 292, $34, .clock
+    +step 2, 138, 276, $33, .clock
+    !byte 0
+.fx63: ; 63: mc-creeper, 50 ticks; Minecraft: Creeper-Zischen und Explosion
+    +step 5, 110, 2200, $41, .clock
+    +step 5, 110, 2600, $42, .clock
+    +step 5, 110, 3000, $43, .clock
+    +step 5, 110, 3400, $44, .clock
+    +step 5, 110, 3800, $45, .clock
+    +step 2, 110, 900, $48, .clock
+    +step 4, 110, 650, $46, .clock
+    +step 6, 110, 400, $44, .clock
+    +step 8, 110, 220, $42, .clock
+    +step 5, 110, 140, $41, .clock
+    !byte 0
+.fx64: ; 64: mc-xp, 11 ticks; Minecraft: Erfahrungsorb
+    +step 2, 880, 1320, $33, .clock
+    +step 2, 1320, 1980, $34, .clock
+    +step 3, 1760, 2640, $33, .clock
+    +step 4, 1320, 1980, $31, .clock
+    !byte 0
+.fx65: ; 65: portal-shot, 14 ticks; Portal 2: Portal-Schuss
+    +step 1, 170, 1600, $56, .clock
+    +step 2, 300, 2400, $55, .clock
+    +step 2, 600, 3200, $54, .clock
+    +step 2, 1200, 1800, $53, .clock
+    +step 3, 800, 1000, $52, .clock
+    +step 4, 400, 500, $51, .clock
+    !byte 0
+.fx66: ; 66: halo-recharge, 32 ticks; Halo Infinite: Schildaufladung
+    +step 4, 440, 1800, $51, .clock
+    +step 4, 554, 2200, $52, .clock
+    +step 4, 659, 2600, $53, .clock
+    +step 4, 880, 3000, $54, .clock
+    +step 4, 1109, 3400, $54, .clock
+    +step 4, 1319, 3800, $53, .clock
+    +step 3, 1760, 110, $13, .clock
+    +step 5, 1760, 110, $11, .clock
+    !byte 0
+.fx67: ; 67: fortnite-shield, 21 ticks; Fortnite: Schildtrank
+    +step 2, 180, 650, $53, .clock
+    +step 2, 260, 900, $54, .clock
+    +step 2, 180, 650, $52, .clock
+    +step 2, 330, 1100, $54, .clock
+    +step 2, 220, 750, $52, .clock
+    +step 3, 660, 1800, $53, .clock
+    +step 3, 988, 110, $14, .clock
+    +step 5, 1319, 110, $12, .clock
+    !byte 0
+.fx68: ; 68: apex-ping, 12 ticks; Apex Legends: Ping
+    +step 2, 1047, 1568, $33, .clock
+    +step 3, 1568, 2352, $34, .clock
+    +step 3, 2093, 3136, $32, .clock
+    +step 4, 1568, 2352, $31, .clock
+    !byte 0
+.fx69: ; 69: zelda-discovery, 28 ticks; Zelda Breath of the Wild: Entdeckung
+    +step 3, 659, 110, $14, .clock
+    +step 3, 784, 110, $14, .clock
+    +step 3, 988, 110, $15, .clock
+    +step 3, 1319, 110, $15, .clock
+    +step 4, 1568, 110, $14, .clock
+    +step 5, 1976, 110, $13, .clock
+    +step 7, 2637, 110, $11, .clock
+    !byte 0
     .export_table = *
     !word .fx0, .fx0
     !word .fx1, .fx1
@@ -378,6 +539,27 @@
     !word .fx47, .fx47
     !word .fx48, .fx48
     !word .fx49, .fx49
+    !word .fx50, .fx50
+    !word .fx51, .fx51
+    !word .fx52, .fx52
+    !word .fx53, .fx53
+    !word .fx54, .fx54
+    !word .fx55, .fx55
+    !word .fx56, .fx56
+    !word .fx57, .fx57
+    !word .fx58, .fx58
+    !word .fx59, .fx59
+    !word .fx60, .fx60
+    !word .fx61, .fx61
+    !word .fx62, .fx62
+    !word .fx63, .fx63
+    !word .fx64, .fx64
+    !word .fx65, .fx65
+    !word .fx66, .fx66
+    !word .fx67, .fx67
+    !word .fx68, .fx68
+    !word .fx69, .fx69
+    !if * - .export_table != SFX_COUNT*4 { !error "Catalog pointer table size" }
 }
 !zone pal_data {
     +catalog 110840, ~sfx_table_pal
@@ -387,8 +569,10 @@
 }
 sfx_flags:
     !byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,3,1,0
+    !byte 0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0
 sfx_durations:
     !byte 30,30,20,25,13,6,10,10,25,25,2,6,6,10,8,9,13,5,10,30,4,5,20,20,25,8,10,12,15,40,10,8,10,13,20,13,20,10,2,18,30,20,30,25,3,15,18,30,40,13
+    !byte 7,3,7,13,13,8,8,29,25,12,10,18,12,50,11,14,32,21,12,28
 sfx_names:
     !word sfx_name_0
     !word sfx_name_1
@@ -440,6 +624,26 @@ sfx_names:
     !word sfx_name_47
     !word sfx_name_48
     !word sfx_name_49
+    !word sfx_name_50
+    !word sfx_name_51
+    !word sfx_name_52
+    !word sfx_name_53
+    !word sfx_name_54
+    !word sfx_name_55
+    !word sfx_name_56
+    !word sfx_name_57
+    !word sfx_name_58
+    !word sfx_name_59
+    !word sfx_name_60
+    !word sfx_name_61
+    !word sfx_name_62
+    !word sfx_name_63
+    !word sfx_name_64
+    !word sfx_name_65
+    !word sfx_name_66
+    !word sfx_name_67
+    !word sfx_name_68
+    !word sfx_name_69
 SFX_JINGLE_WIN = 0
 sfx_name_0: !pet "jingle-win",0
 SFX_JINGLE_LOSE = 1
@@ -540,7 +744,47 @@ SFX_WIND_GUST = 48
 sfx_name_48: !pet "wind-gust",0
 SFX_ELECTRIC_ZAP = 49
 sfx_name_49: !pet "electric-zap",0
+SFX_IM_ROBOT = 50
+sfx_name_50: !pet "im-robot",0
+SFX_BOULDER_DIAMOND = 51
+sfx_name_51: !pet "boulder-diamond",0
+SFX_URIDIUM_LASER = 52
+sfx_name_52: !pet "uridium-laser",0
+SFX_PARADROID_LINK = 53
+sfx_name_53: !pet "paradroid-link",0
+SFX_WIZBALL_PICKUP = 54
+sfx_name_54: !pet "wizball-pickup",0
+SFX_KARATE_PUNCH = 55
+sfx_name_55: !pet "karate-punch",0
+SFX_NINJA_SHURIKEN = 56
+sfx_name_56: !pet "ninja-shuriken",0
+SFX_LEMMINGS_OHNO = 57
+sfx_name_57: !pet "lemmings-ohno",0
+SFX_WORMS_BAZOOKA = 58
+sfx_name_58: !pet "worms-bazooka",0
+SFX_TURRICAN_BEAM = 59
+sfx_name_59: !pet "turrican-beam",0
+SFX_PINBALL_BUMPER = 60
+sfx_name_60: !pet "pinball-bumper",0
+SFX_ALIENBREED_DOOR = 61
+sfx_name_61: !pet "alienbreed-door",0
+SFX_LOTUS_ENGINE = 62
+sfx_name_62: !pet "lotus-engine",0
+SFX_MC_CREEPER = 63
+sfx_name_63: !pet "mc-creeper",0
+SFX_MC_XP = 64
+sfx_name_64: !pet "mc-xp",0
+SFX_PORTAL_SHOT = 65
+sfx_name_65: !pet "portal-shot",0
+SFX_HALO_RECHARGE = 66
+sfx_name_66: !pet "halo-recharge",0
+SFX_FORTNITE_SHIELD = 67
+sfx_name_67: !pet "fortnite-shield",0
+SFX_APEX_PING = 68
+sfx_name_68: !pet "apex-ping",0
+SFX_ZELDA_DISCOVERY = 69
+sfx_name_69: !pet "zelda-discovery",0
 sfx_data_end:
-!if sfx_durations - sfx_flags != 50 { !error "Exactly 50 flags required" }
-!if sfx_names - sfx_durations != 50 { !error "Exactly 50 durations required" }
-!if sfx_name_0 - sfx_names != 100 { !error "Exactly 50 names required" }
+!if sfx_durations - sfx_flags != SFX_COUNT { !error "Exactly SFX_COUNT flags required" }
+!if sfx_names - sfx_durations != SFX_COUNT { !error "Exactly SFX_COUNT durations required" }
+!if sfx_name_0 - sfx_names != SFX_COUNT*2 { !error "Exactly SFX_COUNT names required" }

@@ -23,10 +23,10 @@ sfx_init:
     clc
     rts
 
-; play: A=stable ID 0..49. Flag bit 0: seamless loop; bit 1: noise variation.
+; play: A=stable ID 0..69. Flag bit 0: seamless loop; bit 1: noise variation.
 !zone sfx_play_zone
 sfx_play:
-    cmp #50
+    cmp #SFX_COUNT
     bcs sfx_invalid
     tax
     lda sfx_flags,x
@@ -37,28 +37,35 @@ sfx_play:
     sta sfx_variation
     lda #$a5
     sta sfx_random
-    txa
-    asl
-    asl
-    tax
     lda sfx_ntsc
     beq .pal
-    lda sfx_table_ntsc,x
-    sta sfx_start
-    lda sfx_table_ntsc+1,x
-    sta sfx_start+1
-    lda sfx_table_ntsc+2,x
-    sta sfx_repeat
-    lda sfx_table_ntsc+3,x
-    jmp .pointer
+    lda #<sfx_table_ntsc
+    sta sfx_lookup+1
+    lda #>sfx_table_ntsc
+    jmp .table_high
 .pal:
-    lda sfx_table_pal,x
+    lda #<sfx_table_pal
+    sta sfx_lookup+1
+    lda #>sfx_table_pal
+.table_high:
+    sta sfx_lookup+2
+    txa
+    asl
+    asl                         ; Carry is the ninth index bit (IDs >=64)
+    tax
+    lda sfx_lookup+2
+    adc #0
+    sta sfx_lookup+2
+    jsr sfx_lookup
     sta sfx_start
-    lda sfx_table_pal+1,x
+    inx
+    jsr sfx_lookup
     sta sfx_start+1
-    lda sfx_table_pal+2,x
+    inx
+    jsr sfx_lookup
     sta sfx_repeat
-    lda sfx_table_pal+3,x
+    inx
+    jsr sfx_lookup
 .pointer:
     sta sfx_repeat+1
     jsr sfx_rewind
@@ -68,6 +75,9 @@ sfx_play:
     sta sfx_gap
     jsr sfx_step
     clc
+    rts
+sfx_lookup:
+    lda $ffff,x                 ; writable table operand, supports IDs >=64
     rts
 sfx_invalid:
     sec

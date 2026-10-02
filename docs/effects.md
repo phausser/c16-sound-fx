@@ -1,8 +1,8 @@
 # Effektkatalog – Schritt 3
 
-Alle 50 IDs besitzen eigene Abläufe mit insgesamt 208 Schritten. Tonfolgen, Frequenzbögen, Rauschhüllkurven, verstimmte Tonpaare und kombinierte Quellen werden als begrenzte Datenstreams gespeichert. Kombinationen teilen eine Lautstärke und verwenden Ton 1 plus Rauschen; Metall-/Motoreffekte nutzen bewusst beide Tonkanäle.
+Der ursprüngliche Katalog (IDs 0–49) besitzt 208 Schritte. Die Erweiterung auf 70 IDs hat insgesamt 329 Schritte; die neuen Vorbild-Effekte sind in `game-inspired.md` beschrieben. Tonfolgen, Frequenzbögen, Rauschhüllkurven, verstimmte Tonpaare und kombinierte Quellen werden als begrenzte Datenstreams gespeichert. Kombinationen teilen eine Lautstärke und verwenden Ton 1 plus Rauschen; Metall-/Motoreffekte nutzen bewusst beide Tonkanäle.
 
-Die folgende Dauer ergibt sich aus den Schrittdaten bei 50 logischen Ticks/s. Ziele zwischen zwei Ticks werden auf den nächsten Tick gerundet (z. B. 0,25 s auf 13 Ticks / 0,26 s). Unter NTSC ist der erste/letzte Frame zusätzlich von der laufenden Akkumulatorphase abhängig. Getrennte 10-Bit-Frequenzwerte berücksichtigen den jeweiligen TED-Takt; die größte rechnerische PAL-/NTSC-Abweichung der nominalen Frequenzen im Katalog beträgt 1,32 % durch Registerquantisierung.
+Die folgende Dauer ergibt sich aus den Schrittdaten bei 50 logischen Ticks/s. Ziele zwischen zwei Ticks werden auf den nächsten Tick gerundet (z. B. 0,25 s auf 13 Ticks / 0,26 s). Unter NTSC ist der erste/letzte Frame zusätzlich von der laufenden Akkumulatorphase abhängig. Getrennte 10-Bit-Frequenzwerte berücksichtigen den jeweiligen TED-Takt; die größte rechnerische PAL-/NTSC-Abweichung der nominalen Frequenzen im ursprünglichen Katalog beträgt 1,32 % durch Registerquantisierung.
 
 | ID | Name | Quelle | Ticks | Dauer | Loop |
 |---:|---|---|---:|---:|:---:|
@@ -75,3 +75,11 @@ Die klangliche Beurteilung und Lautstärkeabstimmung aller 50 Effekte sowie echt
 `make record-vice` wiederholt die PAL-/NTSC-Tests ohne Warp mit CoreAudio und erzeugt `build/vice-pal.wav` sowie `build/vice-ntsc.wav`. Die Aufnahmen enthalten zunächst IDs 00–49 in Reihenfolge, danach die acht Loopprüfungen mit Stop. Der Audiotreiber ist über `VICE_SOUND_DEVICE` überschreibbar. Gültige PCM-Dateiköpfe und vorhandene Audiosamples werden geprüft; dies ersetzt keine subjektive Hörprüfung.
 
 Die aktuelle VICE-Version lässt beim Monitor-Exit Platzhalter für die WAV-Längen zurück. Das Testskript finalisiert die Dateiköpfe anhand der tatsächlich aufgenommenen PCM-Samples, ohne Samples zu ändern. WAV-Dateien und Screenshots sind erzeugte Artefakte unter `build/` und werden nicht versioniert.
+
+## Erweiterung auf 70 Effekte
+
+Die ursprünglichen 50 Effekte bleiben unter ihren IDs unverändert.
+20 neue Vorbild-Effekte belegen IDs 50–69; Auswahl, Quellen, Klangkonturen
+und offene Hörabnahme stehen in [game-inspired.md](game-inspired.md).
+Turrican-Strahl und Lotus-Motor ergänzen zwei gestaltete Loops;
+insgesamt sind zehn Effekte ausdrücklich loopbar.

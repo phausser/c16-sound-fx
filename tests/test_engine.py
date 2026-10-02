@@ -7,6 +7,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SYMBOLS = dict((name, int(value, 16)) for name, value in re.findall(
     r"^\s*(\w+)\s*=\s*\$([0-9a-f]+)",
     (ROOT / "build/symbols.txt").read_text(), re.M))
+COUNT = SYMBOLS["SFX_COUNT"]
 MAX_TICK = 0
 
 
@@ -68,7 +69,7 @@ class Engine:
 
 
 for ntsc in (0, 1):
-    for effect in range(50):
+    for effect in range(COUNT):
         duration = Engine().mem[SYMBOLS["sfx_durations"] + effect]
         e = Engine(ntsc)
         e.call("sfx_play", effect)
@@ -115,7 +116,7 @@ for ntsc in (0, 1):
 
 e = Engine()
 e.call("sfx_play", 0)
-for routine, invalids in (("sfx_play", (50, 255)), ("sfx_init", (2, 255)),
+for routine, invalids in (("sfx_play", (COUNT, 255)), ("sfx_init", (2, 255)),
                          ("sfx_set_loop", (2, 255))):
     before = e.mem[0x1001:0x4000], e.mem[0xff0e:0xff13]
     for value in invalids:
@@ -138,7 +139,7 @@ e.call("sfx_shutdown")
 assert e.mem[0xff12] == e.saved[4]
 
 # All stable slots are bounded.
-for effect in range(50):
+for effect in range(COUNT):
     e = Engine()
     e.call("sfx_play", effect)
     assert not e.cpu.p & 1
@@ -181,7 +182,7 @@ assert not e.state('sfx_active') and not e.mem[0xff11]
 # Catalog independently checked against the specification, including source type.
 spec = re.findall(r'^\| (\d+) \| ([a-z0-9-]+) \| (T\+R|T|R) \| ([0-9,]+) s \| .*? \|\s*(ja)?\s*\|',
                   (ROOT / 'SPEC.md').read_text(), re.M)
-assert len(spec) == 50
+assert len(spec) == COUNT
 base = Engine()
 names = []
 for ident, expected_name, source, seconds, loop in spec:
@@ -193,7 +194,7 @@ for ident, expected_name, source, seconds, loop in spec:
     assert name == expected_name
     names.append(name)
     assert bool(base.mem[SYMBOLS['sfx_flags'] + effect] & 1) == bool(loop)
-assert len(set(names)) == 50
+assert len(set(names)) == COUNT
 
 for standard in (0, 1):
     base = Engine(standard)
@@ -250,7 +251,7 @@ for standard in (0, 1):
         e.call('sfx_stop')
         e.ticks(100)
         assert not e.mem[0xff11] and not e.state('sfx_active')
-    assert len(set(streams)) == 50, 'duplicate sound streams'
+    assert len(set(streams)) == COUNT, 'duplicate sound streams'
 
 # Intentional pauses are preserved, with no extra silent frame at loop seams.
 for ident, _, _, _, loop in spec:
@@ -286,9 +287,9 @@ first = fire_trace(fire)
 assert first == fire_trace(fire) == fire_trace(Engine())
 assert first[:30] != first[30:]
 assert fire.state('sfx_random') != 0
-print('Catalog checks passed: 50 stable IDs/names, unique streams, all durations and loop seams')
+print('Catalog checks passed: 70 stable IDs/names, unique streams, all durations and loop seams')
 
 print(f"Engine checks passed; maximum measured tick: {MAX_TICK} CPU cycles")
 print(f"Code: {SYMBOLS['sfx_code_end'] - SYMBOLS['sfx_init']} bytes; "
       f"state: {SYMBOLS['sfx_state_end'] - SYMBOLS['sfx_state']} bytes "
-      "(2 mutable operand bytes included in code); zero page: 0 bytes")
+      "(4 mutable operand bytes included in code); zero page: 0 bytes")
