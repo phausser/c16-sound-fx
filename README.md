@@ -6,9 +6,9 @@ Der C16 erzeugt seinen Sound mit dem TED: zwei Rechteck-Tonkanäle und ein Rausc
 
 ## Aktueller Stand
 
-Build, nicht blockierende Soundengine und alle 50 Effektdaten sind implementiert. Die Katalogdemo startet jeden Effekt über seine stabile ID 00–49. Acht Effekte haben gestaltete Loops; `fire-crackle` verwendet reproduzierbare Knistervariation. Das Auswahlmenü zeigt drei Seiten mit 20/20/10 Einträgen, Auswahlmarkierung, Wiedergabe- und Loopstatus. Cursortasten navigieren; RETURN/SPACE startet die Auswahl. Aktionsentprellung und kontrollierte Tastenwiederholung bleiben geplant. CPU-Tests und VICE-Prüfungen auf PAL/NTSC mit 16 KB RAM bestehen; die Startanzeige ist visuell geprüft. Klangabstimmung und Hardwareprüfung bleiben offen.
+Build, nicht blockierende Soundengine und alle 50 Effektdaten sind implementiert. Die Katalogdemo startet jeden Effekt über seine stabile ID 00–49. Acht Effekte haben gestaltete Loops; `fire-crackle` verwendet reproduzierbare Knistervariation. Das Auswahlmenü zeigt drei nach Kategorien sortierte Seiten mit 20/20/10 Einträgen, Auswahlmarkierung, Wiedergabe- und Loopstatus. Hinter jedem Namen steht die Kategorie in Klammern. Die Kopfzeile ist invers; H öffnet eine separate Hilfeseite. Hintergrund und Rahmen sind schwarz, die Schrift weiß. Cursortasten navigieren; RETURN/SPACE startet die Auswahl. Aktionskeys lösen einmal je Tastendruck aus; gehaltene Cursortasten wiederholen nach 0,5 Sekunden alle 0,1 Sekunden. CPU-Tests und VICE-Prüfungen auf PAL/NTSC mit 16 KB RAM bestehen; die Startanzeige ist visuell geprüft. Klangabstimmung und Hardwareprüfung bleiben offen.
 
-Die Demo belegt 5057 Bytes; die Engine samt vollständigem Katalog 4269 Bytes, ohne Zero Page. Der höchste getestete Tick benötigt 332 CPU-Zyklen. API und Messgrenzen: [docs/engine.md](docs/engine.md). Katalog und Prüfungen: [docs/effects.md](docs/effects.md). Hardwaregrundlage: [docs/hardware.md](docs/hardware.md).
+Die Demo belegt 6731 Bytes; die Engine samt vollständigem Katalog 4269 Bytes, ohne Zero Page. Der höchste getestete Tick benötigt 332 CPU-Zyklen. API und Messgrenzen: [docs/engine.md](docs/engine.md). Katalog und Prüfungen: [docs/effects.md](docs/effects.md). Hardwaregrundlage: [docs/hardware.md](docs/hardware.md).
 
 - [SPEC.md](SPEC.md): Anforderungen, vollständiger Katalog der 50 Effekte, API und Abnahme.
 - [TOOD.md](TOOD.md): Umsetzungsschritte und Prüfungen.
@@ -40,12 +40,13 @@ make run ACME=/pfad/zu/acme VICE=/pfad/zu/xplus4
 | Cursor hoch/runter, links/rechts | Auswahl, Seite wechseln |
 | RETURN oder SPACE | Auswahl starten/neustarten |
 | 00–49, dann RETURN oder SPACE | Effekt per ID starten/neustarten |
+| H | Hilfe öffnen/schließen; RETURN/SPACE kehrt zum Katalog zurück |
 | L | Wiederholung umschalten |
 | S | Wiedergabe und Wiederholung stoppen |
 | Q | Ressourcen freigeben und nach BASIC zurückkehren |
 | P / N | PAL / NTSC wählen; muss zum Emulator passen, stoppt Wiedergabe |
 
-Die Demo startet mit ID 00, PAL und Wiederholung aus. Beispielsweise startet `24` und RETURN den Effekt `vogelflug`. Ein oder zwei Ziffern werden angenommen; eine dritte Ziffer beginnt eine neue Eingabe. Ungültige IDs 50–99 lassen die Wiedergabe unverändert. Für NTSC: `make run VICE_STANDARD=ntsc`, anschließend N drücken. Ein anderer Audiotreiber ist über `VICE_SOUND_DEVICE` wählbar. Aktionsentprellung ist noch offen.
+Die Demo startet mit ID 00, PAL und Wiederholung aus. Beispielsweise startet `24` und RETURN den Effekt `vogelflug`. Ein oder zwei Ziffern werden angenommen; eine dritte Ziffer beginnt eine neue Eingabe. Ungültige IDs 50–99 lassen die Wiedergabe unverändert. Für NTSC: `make run VICE_STANDARD=ntsc`, anschließend N drücken. Ein anderer Audiotreiber ist über `VICE_SOUND_DEVICE` wählbar. Die Demo deaktiviert die KERNAL-Tastenwiederholung und stellt deren vorherigen Wert bei Q wieder her.
 
 ## Automatisierte Prüfung
 
@@ -72,7 +73,7 @@ make record-vice
 | S oder RUN/STOP | Wiedergabe und Wiederholung stoppen |
 | Q | Zurück zu BASIC |
 
-Die Liste umfasst drei Seiten mit 20, 20 und 10 Einträgen. Navigation bleibt während der Wiedergabe möglich. Ein neuer Start ersetzt den laufenden Effekt.
+Die Liste umfasst drei Seiten mit 20, 20 und 10 Einträgen. Kategorien stehen zusammenhängend hintereinander und dürfen über einen Seitenwechsel weiterlaufen. Die Sortierung verändert weder die angezeigten noch die API-IDs. Gruppen: JINGLE, SAMMELN, MENU, SIGNAL, BEWEGUNG, FAHRGERAEUSCH, UMGEBUNG, OBJEKT, SCHUSS, EXPLOSION, KAMPF. Die Hilfeseite hält Auswahl und Wiedergabe aufrecht; L, S/RUN-STOP und Q bleiben verfügbar. Navigation bleibt während der Wiedergabe möglich. Ein neuer Start ersetzt den laufenden Effekt.
 
 ## Entwicklung und Commits
 

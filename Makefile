@@ -20,6 +20,7 @@ run: $(PRG)
 
 test: $(PRG)
 	$(PYTHON) tests/test_engine.py
+	$(PYTHON) tests/test_menu.py
 
 test-vice: $(PRG)
 	$(PYTHON) tests/vice_smoke.py $(VICE)

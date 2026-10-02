@@ -11,9 +11,19 @@ TED_VOICE2 = $20
 TED_NOISE = $40
 TED_RELOAD = $80
 
+TED_BACKGROUND = $ff15
+TED_BORDER = $ff19
+TED_WHITE = $71                 ; luminance 7, color 1, no blink
+
 KERNAL_CHROUT = $ffd2
 KERNAL_GETIN = $ffe4
 SCREEN_BASE = $0c00
 ATTRIBUTE_BASE = $0800
 PROGRAM_BASE = $1001
 RAM_END = $4000                 ; exclusive, unexpanded C16
+
+; Verified against installed Commodore KERNAL 318004-05, $DB11-$DC2B.
+KERNAL_KEY_SCAN = $c6           ; matrix index, $40 means released
+KERNAL_SHIFT = $0543
+KERNAL_REPEAT = $0540          ; bit 6 disables all KERNAL key repeat
+KERNAL_STOP = $ffe1

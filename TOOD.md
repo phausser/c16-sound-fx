@@ -47,13 +47,13 @@ Alle 50 Abläufe sind technisch auf PAL/NTSC mit 16 KB RAM geprüft. Die subjekt
 
 - [x] 40×25-Anzeige mit Seiten zu 20/20/10 Einträgen aufbauen.
 - [x] Auswahlmarkierung, Status, Wiederholung und Tastenhilfe darstellen.
-- [ ] Navigation und kontrollierte Tastenwiederholung implementieren.
-- [ ] RETURN/SPACE, L, S/RUN-STOP und Q implementieren.
-- [ ] Frame-Takt anbinden, ohne Soundengine mit Menü oder KERNAL zu koppeln.
-- [ ] Seitenwechsel und Auswahl während laufender Effekte prüfen.
-- [ ] Sauberen Exit nach BASIC samt Ressourcenfreigabe prüfen.
+- [x] Navigation und kontrollierte Tastenwiederholung implementieren.
+- [x] RETURN/SPACE, L, S/RUN-STOP und Q implementieren.
+- [x] Frame-Takt anbinden, ohne Soundengine mit Menü oder KERNAL zu koppeln.
+- [x] Seitenwechsel und Auswahl während laufender Effekte prüfen.
+- [x] Sauberen Exit nach BASIC samt Ressourcenfreigabe prüfen.
 
-Menü-Zwischenstand: drei Katalogseiten und Statusanzeige implementiert. VICE PAL/NTSC mit 16 KB prüft Seitenwechsel, 50 Starts/Enden, acht Loops/Stops und Q-Rückkehr. Startseite visuell geprüft. Aktionsentprellung, kontrollierte Navigationstastenwiederholung und gezielte Navigation während laufender Wiedergabe bleiben offen.
+Menü-Zwischenstand: drei Katalogseiten und Statusanzeige implementiert. VICE PAL/NTSC mit 16 KB prüft Seitenwechsel, 50 Starts/Enden, acht Loops/Stops und Q-Rückkehr. Startseite und separate Hilfeseite visuell geprüft. KERNAL-Wiederholung ist während der Demo deaktiviert und wird beim Exit wiederhergestellt. Eigene Cursortastenwiederholung nach 0,5 s, danach alle 0,1 s (PAL/NTSC); CPU-Tests prüfen gehaltene Tasten und Loslassen. VICE prüft Seitenwechsel während aller acht Loops. Eine manuelle Bedienprüfung mit tatsächlich gehaltenen Host-Tasten bleibt zusätzlich offen.
 
 ## 5. Abnahme und Übergabe
 
@@ -67,3 +67,19 @@ Menü-Zwischenstand: drei Katalogseiten und Statusanzeige implementiert. VICE PA
 - [ ] Menüfreies Integrationsbeispiel erstellen und bauen.
 - [ ] README mit Build, Start, Bedienung, API, Speicherbedarf und gemessener Tick-Laufzeit schreiben.
 - [ ] PRG bereitstellen; Ergebnisse und verbleibende Einschränkungen gegen die SPEC-Abnahmekriterien festhalten.
+
+## Nächste Umsetzungsschritte
+
+1. Manuelle Bedienprüfung mit gehaltenen Host-Tasten in VICE ergänzen (CPU-Tests und technische PAL/NTSC-Prüfung bestehen).
+2. Neustart, RUN/STOP und Loop-Abschaltung zusätzlich über echte Host-Tasten prüfen; Navigation während laufender Loops ist per VICE-Monitor geprüft.
+3. Menüfreies Integrationsbeispiel erstellen, mit ACME bauen und auf dem 16-KB-C16 prüfen.
+4. Alle 50 Effekte anhören und abstimmen; PAL/NTSC-Zeit und Tonhöhe vergleichen. Hardwaretest nur bei verfügbarem Gerät.
+
+Darstellung: schwarzer Hintergrund und Rahmen, weiße Schrift (TED-Attribut `$71`).
+
+### Kategorieansicht und Hilfe
+
+- [x] Alle 50 Effekte nach Kategorie zusammenhängend anzeigen, Namen mit `(KATEGORIE)` ergänzen; IDs beibehalten.
+- [x] Inverse Kopfzeile auf schwarzem Hintergrund mit weißer Schrift.
+- [x] Tastaturbefehle auf separate H-Hilfeseite verschieben; Rückkehr erhält Auswahl und laufenden Effekt.
+- [x] CPU-Tests für alle 50 ausgewählten Starts, Kategorienreihenfolge und Hilfe ergänzen; VICE PAL/NTSC mit 16 KB prüfen.

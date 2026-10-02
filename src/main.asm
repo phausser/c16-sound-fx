@@ -27,6 +27,7 @@ poll:
     bne .keys
     inc frame_seen
     jsr sfx_tick
+    jsr menu_keyboard_tick
     jsr menu_status
     jmp .keys
 .low:
@@ -36,25 +37,41 @@ poll:
     jsr KERNAL_GETIN           ; IRQ keyboard scan stays enabled
     jsr menu_key
     cmp #0
-    beq ignore_key
+    bne +
+    jmp ignore_key
++
     cmp #'Q'
     bne +
     jmp exit
 +
     cmp #'S'
-    beq stop
+    bne +
+    jmp stop
++
     cmp #3                    ; RUN/STOP buffered PETSCII
-    beq stop
+    bne +
+    jmp stop
++
     cmp #'L'
-    beq toggle_loop
+    bne +
+    jmp toggle_loop
++
     cmp #'N'
-    beq ntsc
+    bne +
+    jmp ntsc
++
     cmp #'P'
-    beq pal
+    bne +
+    jmp pal
++
     cmp #13
-    beq play_input
+    bne +
+    jmp play_input
++
     cmp #' '
-    beq play_input
+    bne +
+    jmp play_input
++
     cmp #'0'
     bcc ignore_key
     cmp #'9'+1
@@ -92,7 +109,8 @@ ignore_key:
 play_input:
     lda input_digits
     bne +
-    lda menu_selected
+    ldx menu_selected
+    lda menu_order,x
     sta input_id
 +
     lda input_id            ; IDs 50..99 rejected without interrupting playback
@@ -121,6 +139,7 @@ set_standard:
     jmp poll
 exit:
     jsr sfx_shutdown
+    jsr menu_shutdown
     rts                       ; return through BASIC SYS
 frame_seen: !byte 0
 input_id: !byte 0

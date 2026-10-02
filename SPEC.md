@@ -18,7 +18,9 @@ Relevante Register: `$FF0E` (Ton 1, Frequenz unten), `$FF0F` (Ton 2/Rauschen, Fr
 
 - 40 × 25 Zeichen, PETSCII-kompatible Namen ohne Umlaute.
 - Drei Seiten: 20, 20 und 10 Einträge; ein Eintrag pro Zeile mit ID und Name.
-- Kopfzeile mit Titel und Seite; Fußzeilen mit ausgewählter ID, Wiedergabestatus, Wiederholungsstatus und Tastenhilfe.
+- Inverse Kopfzeile mit Titel und Seite; Fußzeilen mit ausgewählter ID, Wiedergabestatus, Wiederholungsstatus und Hinweis auf H. Schwarzer Hintergrund und Rahmen, weiße Schrift.
+- Anzeige nach zusammenhängenden Kategorien sortieren; hinter jedem Namen `(KATEGORIE)` zeigen. Kategorien dürfen über Seitenwechsel weiterlaufen. Sortierung verändert die stabilen IDs nicht.
+- Separate Hilfeseite mit allen Tastaturbefehlen: H öffnet/schließt sie; RETURN/SPACE kehrt zum Katalog zurück. Auswahl und laufende Wiedergabe bleiben erhalten. Navigation und ID-Eingabe sind auf der Hilfeseite gesperrt; Loop, Stop, Videostandardwechsel und Exit bleiben verfügbar.
 - Cursor hoch/runter: Auswahl; links/rechts: Seite. Auswahlgrenzen werden begrenzt, kein unbeabsichtigtes Umspringen.
 - RETURN oder SPACE: ausgewählten Effekt starten beziehungsweise von vorn starten.
 - L: Wiederholung ein/aus. Jeder Effekt kann wiederholt werden; ausdrücklich loopbare Effekte haben einen gestalteten Zyklus. Bei Einzeleffekten liegt zwischen Wiederholungen eine kurze Pause.

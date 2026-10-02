@@ -26,7 +26,9 @@ durations = prg[offset:offset + 50]
 
 for standard in ('pal', 'ntsc'):
     prefix = BUILD / f'vice-{standard}'
-    commands = ['delete 1']  # remove persistent initbreak
+    commands = ['delete 1', f'bsave "{prefix}-repeat.bin" 0 $0540 $0540',
+                f'bsave "{prefix}-repeat-saved.bin" 0 '
+                f"${symbols['menu_saved_repeat']:04x} ${symbols['menu_saved_repeat']:04x}"]  # remove persistent initbreak
     if record:
         commands += ['warp off']  # VICE does not flush WAV samples during warp
     if standard == 'ntsc':
@@ -34,6 +36,8 @@ for standard in ('pal', 'ntsc'):
                      f"until ${symbols['poll']:04x}"]
     # Allow TED to render the complete screen before taking the screenshot.
     commands += [f"break ${symbols['sfx_tick']:04x}", 'ignore 1 2', 'x', 'delete 1']
+    commands += [f'bsave "{prefix}-attributes.bin" 0 $0800 $0be7',
+                 f'bsave "{prefix}-colors.bin" 0 $ff15 $ff19']
     commands += ['screen', f'bsave "{prefix}-screen.bin" 0 $0c00 $0fe7',
                  f'screenshot "{prefix}-screen.png" 2']
     for page, key in ((2, r"\x1d"), (3, r"\x1d"), (1, r"\x9d\x9d")):
@@ -43,6 +47,13 @@ for standard in ('pal', 'ntsc'):
             commands += [f"until ${symbols['menu_draw']:04x}",
                          f"until ${symbols['poll']:04x}"]
         commands += [f'bsave "{prefix}-page{page}.bin" 0 $0c00 $0fe7']
+    commands += ['keybuf "h"', f"until ${symbols['menu_draw']:04x}",
+                 f"until ${symbols['poll']:04x}",
+                 f"break ${symbols['sfx_tick']:04x}", 'ignore 1 2', 'x', 'delete 1',
+                 f'bsave "{prefix}-help.bin" 0 $0c00 $0fe7',
+                 f'screenshot "{prefix}-help.png" 2',
+                 'keybuf "h"', f"until ${symbols['menu_draw']:04x}",
+                 f"until ${symbols['poll']:04x}"]
     # All catalog IDs are entered through the actual demo's numeric input.
     for effect in range(50):
         key = f'{effect:02d}'
@@ -69,11 +80,19 @@ for standard in ('pal', 'ntsc'):
                      'delete 1',
                      f'bsave "{prefix}-{effect:02d}-loop.bin" 0 '
                      f"${symbols['sfx_active']:04x} ${symbols['sfx_gap']:04x}",
+                     'keybuf "\\x1d"', f"until ${symbols['menu_draw']:04x}",
+                     f"until ${symbols['poll']:04x}",
+                     'keybuf "\\x9d"', f"until ${symbols['menu_draw']:04x}",
+                     f"until ${symbols['poll']:04x}",
+                     f'bsave "{prefix}-{effect:02d}-navigated.bin" 0 '
+                     f"${symbols['sfx_active']:04x} ${symbols['sfx_gap']:04x}",
                      'keybuf "s"', f"until ${symbols['stop']:04x}",
                      f"until ${symbols['poll']:04x}",
                      f'bsave "{prefix}-{effect:02d}-stopped.bin" 0 $ff0e $ff12']
     commands += ['keybuf "q"', f"until ${symbols['exit']:04x}",
-                 'next', 'step', 'registers', 'quit']
+                  'next', 'next',
+                 f'bsave "{prefix}-repeat-restored.bin" 0 $0540 $0540',
+                 'step', 'registers', 'quit' ]
     script = prefix.with_suffix('.mon')
     log = prefix.with_suffix('.log')
     script.write_text('\n'.join(commands) + '\n')
@@ -91,15 +110,29 @@ for standard in ('pal', 'ntsc'):
             '-monlog', '-monlogname', str(log), '-limitcycles', '200000000'
         ], cwd=ROOT, stdout=output, stderr=subprocess.STDOUT, timeout=60)
     assert result.returncode == 0, prefix.with_suffix('.stdout.log')
-    text = log.read_text()
+    assert Path(f'{prefix}-repeat.bin').read_bytes() == b'\x40'
+    assert Path(f'{prefix}-repeat-restored.bin').read_bytes() == Path(
+        f'{prefix}-repeat-saved.bin').read_bytes()
+    text = log.read_text(encoding="latin-1")
+    assert Path(f'{prefix}-attributes.bin').read_bytes() == bytes([0x71]) * 1000
+    colors = Path(f'{prefix}-colors.bin').read_bytes()
+    assert colors[0] & 0x7f == 0 and colors[4] & 0x7f == 0
     screen = Path(f'{prefix}-screen.bin').read_bytes()
-    decoded = ''.join(chr(b + 64) if b < 32 else chr(b) for b in screen)
+    decoded = ''.join(chr((b & 0x7f) + 64) if (b & 0x7f) < 32 else chr(b & 0x7f) for b in screen)
     assert '50 SOUND EFFECTS' in decoded
-    for page, first in ((1, '00 JINGLE-WIN'), (2, '20 STEP-STONE'), (3, '40 TELEPORT')):
+    assert all(b & 0x80 for b in screen[:40])
+    assert '(JINGLE)' in decoded and '(SAMMELN)' in decoded
+    assert 'CURSOR: SELECT/PAGE' not in decoded
+    help_data = Path(f'{prefix}-help.bin').read_bytes()
+    help_text = ''.join(chr((b & 0x7f) + 64) if (b & 0x7f) < 32
+                        else chr(b & 0x7f) for b in help_data)
+    assert 'CURSOR UP/DOWN' in help_text and 'RUN-STOP' in help_text
+    assert all(b & 0x80 for b in help_data[:40])
+    for page, first in ((1, '00 JINGLE-WIN'), (2, '16 DOUBLE-JUMP'), (3, '27 MACHINE-GUN')):
         data = Path(f'{prefix}-page{page}.bin').read_bytes()
-        content = ''.join(chr(b + 64) if b < 32 else chr(b) for b in data)
+        content = ''.join(chr((b & 0x7f) + 64) if (b & 0x7f) < 32 else chr(b & 0x7f) for b in data)
         assert first in content, (standard, page, content)
-        assert data[36] == ord(str(page))
+        assert data[36] == ord(str(page)) | 0x80
     assert 'ERROR' not in text and 'not a valid checkpoint' not in text
     for effect in range(50):
         key = f'{effect:02d}'
@@ -111,6 +144,8 @@ for standard in ('pal', 'ntsc'):
     for effect in (22, 23, 24, 27, 41, 43, 47, 48):
         state = Path(f'{prefix}-{effect:02d}-loop.bin').read_bytes()
         assert state[0] == 1 and state[1] == 1 and state[3] == 0
+        navigated = Path(f'{prefix}-{effect:02d}-navigated.bin').read_bytes()
+        assert navigated[0] == navigated[1] == 1
         assert Path(f'{prefix}-{effect:02d}-stopped.bin').read_bytes()[3] == 0
     final_pc = int(re.findall(r'^\.;([0-9a-f]{4}) ', text, re.M)[-1], 16)
     assert 0x8000 <= final_pc < 0xff00, hex(final_pc)
