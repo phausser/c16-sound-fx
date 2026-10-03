@@ -62,15 +62,21 @@ Die Benutzeränderung hat `TODO.md` entfernt; diese Datei führt den verbleibend
 
 Keiner dieser offenen Punkte ist als bestanden markiert.
 
-## `make run`-Nachweis vor der Erweiterung auf 70 Effekte
+## `make run`-Nachweis mit 105 Effekten
 
-Vom Benutzer ausgeführtes `make run` bestätigt VICE 3.10, `-model c16`,
-`-ramsize 16`, `-pal`, `-sounddev coreaudio` und PRG-RAM-Injektion ab
-`$1001` mit `$198F` Bytes Nutzlast. Autostart endet mit `Starting program`
-und `Done`; CoreAudio öffnet die MacBook-Pro-Lautsprecher bei 48000 Hz.
-Die Vorabmeldungen zur Disk-/Tape-/Cartridge-Erkennung verhindern den
-anschließenden PRG-Start nicht. Dies belegt Start und geöffnetes Audio,
-keine menschliche Hörbeurteilung oder vollständige Bedienabnahme.
+Vom Benutzer am 2026-10-03 ausgeführtes `make run` (Stand `605b16d`)
+bestätigt VICE 3.10, `-model c16`, `-ramsize 16`, `-pal`,
+`-sounddev coreaudio` und PRG-RAM-Injektion ab `$1001` mit `$2F00` Bytes
+Nutzlast, passend zum Build-Ende `$3F00`. Autostart endet mit
+`Starting program` und `Done`; CoreAudio öffnet die MacBook-Pro-Lautsprecher
+bei 48000 Hz. Ebenso startete `make run-example` mit `$292D` Bytes ab
+`$1001`. Die Vorabmeldungen zur Disk-/Tape-/Cartridge-Erkennung und fehlende
+Laufwerks-ROMs verhindern den PRG-Start nicht. Dies belegt Start und
+geöffnetes Audio, keine menschliche Hörbeurteilung oder vollständige
+Bedienabnahme.
+
+Früherer Nachweis vor der Erweiterung auf 70 Effekte: `$198F` Bytes Nutzlast,
+gleiche Optionen und gleiches Ergebnis.
 
 ## Erweiterung: 20 Spielvorbilder
 
