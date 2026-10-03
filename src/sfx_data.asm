@@ -566,6 +566,249 @@
     +step 4, 262, 275, $32, .clock
     +step 7, 165, 174, $31, .clock
     !byte 0
+.fx80: ; 80: mario-coin, 14 ticks; Super Mario Bros.: Muenze
+    +step 2, 1109, 110, $15, .clock
+    +step 4, 1480, 110, $15, .clock
+    +step 4, 1480, 110, $13, .clock
+    +step 4, 1480, 110, $11, .clock
+    !byte 0
+.fx81: ; 81: mario-jump, 11 ticks; Super Mario Bros.: Sprung
+    +step 1, 350, 110, $14, .clock
+    +step 1, 450, 110, $15, .clock
+    +step 1, 560, 110, $15, .clock
+    +step 1, 680, 110, $14, .clock
+    +step 1, 800, 110, $14, .clock
+    +step 2, 950, 110, $13, .clock
+    +step 2, 1100, 110, $12, .clock
+    +step 2, 1200, 110, $11, .clock
+    !byte 0
+.fx82: ; 82: mario-1up, 18 ticks; Super Mario Bros.: Extraleben
+    +step 3, 1047, 110, $15, .clock
+    +step 3, 1319, 110, $15, .clock
+    +step 3, 2093, 110, $15, .clock
+    +step 3, 1760, 110, $15, .clock
+    +step 3, 1976, 110, $14, .clock
+    +step 3, 2637, 110, $13, .clock
+    !byte 0
+.fx83: ; 83: mario-mushroom, 30 ticks; Super Mario Bros.: Power-up
+    +step 2, 392, 110, $14, .clock
+    +step 2, 523, 110, $15, .clock
+    +step 2, 659, 110, $15, .clock
+    +step 2, 440, 110, $14, .clock
+    +step 2, 587, 110, $15, .clock
+    +step 2, 740, 110, $15, .clock
+    +step 2, 494, 110, $14, .clock
+    +step 2, 659, 110, $15, .clock
+    +step 2, 831, 110, $15, .clock
+    +step 2, 523, 110, $14, .clock
+    +step 2, 698, 110, $15, .clock
+    +step 2, 880, 110, $15, .clock
+    +step 2, 587, 110, $14, .clock
+    +step 2, 784, 110, $14, .clock
+    +step 2, 988, 110, $13, .clock
+    !byte 0
+.fx84: ; 84: mario-pipe, 18 ticks; Super Mario Bros.: Rohr/Schrumpfen
+    +step 1, 880, 110, $15, .clock
+    +step 1, 659, 110, $15, .clock
+    +step 1, 523, 110, $15, .clock
+    +step 1, 110, 110, $00, .clock
+    +step 1, 740, 110, $15, .clock
+    +step 1, 554, 110, $15, .clock
+    +step 1, 440, 110, $15, .clock
+    +step 1, 110, 110, $00, .clock
+    +step 1, 622, 110, $14, .clock
+    +step 1, 466, 110, $14, .clock
+    +step 1, 370, 110, $14, .clock
+    +step 1, 110, 110, $00, .clock
+    +step 2, 523, 110, $13, .clock
+    +step 2, 392, 110, $12, .clock
+    +step 2, 311, 110, $11, .clock
+    !byte 0
+.fx85: ; 85: mario-fireball, 7 ticks; Super Mario Bros.: Feuerball
+    +step 1, 1400, 110, $15, .clock
+    +step 1, 900, 110, $14, .clock
+    +step 1, 600, 110, $13, .clock
+    +step 1, 1200, 110, $13, .clock
+    +step 1, 700, 110, $12, .clock
+    +step 2, 450, 110, $11, .clock
+    !byte 0
+.fx86: ; 86: mario-stomp, 8 ticks; Super Mario Bros.: Gegner zertreten
+    +step 1, 900, 2000, $55, .clock
+    +step 2, 600, 1200, $54, .clock
+    +step 2, 300, 600, $53, .clock
+    +step 3, 200, 110, $12, .clock
+    !byte 0
+.fx87: ; 87: mario-brick, 13 ticks; Super Mario Bros.: Block zerbricht
+    +step 2, 110, 3000, $46, .clock
+    +step 1, 110, 1800, $44, .clock
+    +step 1, 110, 110, $00, .clock
+    +step 2, 110, 2400, $45, .clock
+    +step 1, 110, 1200, $43, .clock
+    +step 1, 110, 110, $00, .clock
+    +step 2, 110, 1600, $43, .clock
+    +step 3, 110, 700, $41, .clock
+    !byte 0
+.fx88: ; 88: mario-flagpole, 36 ticks; Super Mario Bros.: Fahnenmast
+    +step 3, 2000, 110, $14, .clock
+    +step 3, 1750, 110, $14, .clock
+    +step 3, 1530, 110, $14, .clock
+    +step 3, 1340, 110, $14, .clock
+    +step 3, 1170, 110, $14, .clock
+    +step 3, 1020, 110, $14, .clock
+    +step 3, 890, 110, $14, .clock
+    +step 3, 780, 110, $13, .clock
+    +step 3, 680, 110, $13, .clock
+    +step 3, 600, 110, $13, .clock
+    +step 3, 520, 110, $12, .clock
+    +step 3, 450, 110, $11, .clock
+    !byte 0
+.fx89: ; 89: mario-spin, 10 ticks; Super Mario World: Wirbelsprung
+    +step 1, 600, 2400, $54, .clock
+    +step 1, 900, 3200, $53, .clock
+    +step 1, 700, 2600, $54, .clock
+    +step 1, 1000, 3400, $53, .clock
+    +step 1, 800, 2800, $54, .clock
+    +step 1, 1100, 3600, $53, .clock
+    +step 1, 900, 3000, $53, .clock
+    +step 1, 1200, 3800, $52, .clock
+    +step 2, 110, 2000, $41, .clock
+    !byte 0
+.fx90: ; 90: angry-launch, 18 ticks; Angry Birds: Schleuder
+    +step 3, 150, 300, $52, .clock
+    +step 3, 170, 360, $53, .clock
+    +step 3, 190, 420, $53, .clock
+    +step 1, 110, 110, $00, .clock
+    +step 1, 110, 3200, $46, .clock
+    +step 2, 110, 2200, $45, .clock
+    +step 2, 110, 1400, $43, .clock
+    +step 3, 110, 800, $41, .clock
+    !byte 0
+.fx91: ; 91: fruit-slice, 10 ticks; Fruit Ninja: Schnitt
+    +step 1, 110, 1500, $43, .clock
+    +step 1, 110, 3000, $45, .clock
+    +step 2, 110, 3800, $44, .clock
+    +step 1, 110, 110, $00, .clock
+    +step 1, 110, 600, $46, .clock
+    +step 2, 110, 350, $43, .clock
+    +step 2, 110, 200, $41, .clock
+    !byte 0
+.fx92: ; 92: flappy-point, 12 ticks; Flappy Bird: Punkt
+    +step 2, 1319, 110, $15, .clock
+    +step 3, 1976, 110, $16, .clock
+    +step 3, 1976, 110, $14, .clock
+    +step 4, 1976, 110, $12, .clock
+    !byte 0
+.fx93: ; 93: temple-coin, 9 ticks; Temple Run: Muenze
+    +step 1, 1760, 1786, $34, .clock
+    +step 1, 2349, 2384, $34, .clock
+    +step 1, 2794, 2836, $34, .clock
+    +step 1, 110, 110, $00, .clock
+    +step 1, 2093, 2124, $33, .clock
+    +step 1, 2794, 2836, $33, .clock
+    +step 3, 3520, 3573, $32, .clock
+    !byte 0
+.fx94: ; 94: candy-match, 13 ticks; Candy Crush Saga: Reihe
+    +step 2, 659, 988, $34, .clock
+    +step 1, 110, 110, $00, .clock
+    +step 2, 880, 1319, $35, .clock
+    +step 1, 110, 110, $00, .clock
+    +step 2, 1175, 1760, $35, .clock
+    +step 1, 110, 110, $00, .clock
+    +step 4, 1568, 2349, $33, .clock
+    !byte 0
+.fx95: ; 95: subway-jump, 8 ticks; Subway Surfers: Sprung
+    +step 1, 300, 1200, $53, .clock
+    +step 1, 420, 1800, $54, .clock
+    +step 1, 560, 2400, $54, .clock
+    +step 1, 720, 3000, $53, .clock
+    +step 2, 900, 110, $13, .clock
+    +step 2, 1050, 110, $12, .clock
+    !byte 0
+.fx96: ; 96: cutrope-snip, 14 ticks; Cut the Rope: Schnitt und Schlucken
+    +step 1, 1760, 3600, $55, .clock
+    +step 1, 110, 2400, $43, .clock
+    +step 2, 110, 110, $00, .clock
+    +step 3, 330, 110, $14, .clock
+    +step 3, 220, 110, $14, .clock
+    +step 4, 165, 110, $12, .clock
+    !byte 0
+.fx97: ; 97: doodle-spring, 14 ticks; Doodle Jump: Sprungfeder
+    +step 1, 200, 110, $15, .clock
+    +step 1, 260, 110, $15, .clock
+    +step 1, 340, 110, $15, .clock
+    +step 1, 300, 110, $14, .clock
+    +step 1, 420, 110, $14, .clock
+    +step 1, 380, 110, $14, .clock
+    +step 1, 520, 110, $13, .clock
+    +step 1, 470, 110, $13, .clock
+    +step 2, 640, 110, $13, .clock
+    +step 2, 600, 110, $12, .clock
+    +step 2, 760, 110, $11, .clock
+    !byte 0
+.fx98: ; 98: pokemongo-catch, 26 ticks; Pokemon GO: Fang
+    +step 1, 900, 110, $13, .clock
+    +step 5, 110, 110, $00, .clock
+    +step 1, 900, 110, $13, .clock
+    +step 5, 110, 110, $00, .clock
+    +step 1, 900, 110, $13, .clock
+    +step 5, 110, 110, $00, .clock
+    +step 2, 1319, 110, $14, .clock
+    +step 2, 1760, 110, $14, .clock
+    +step 4, 2637, 110, $12, .clock
+    !byte 0
+.fx99: ; 99: jetpack-thrust, 8 ticks; Jetpack Joyride: Duesenschub
+    +step 2, 130, 1800, $54, .clock
+    +step 2, 140, 2200, $55, .clock
+    +step 2, 125, 1600, $54, .clock
+    +step 2, 135, 2400, $55, .clock
+    !byte 0
+.fx100: ; 100: bd-boulder, 4 ticks; Boulder Dash: Felsbrocken (Rauschen 143.5 Hz)
+    +step 2, 110, 144, $47, .clock
+    +step 1, 110, 144, $44, .clock
+    +step 1, 110, 144, $41, .clock
+    !byte 0
+.fx101: ; 101: bd-diamond-fall, 10 ticks; Boulder Dash: fallende Diamanten (2092-3980 Hz)
+    +step 2, 3200, 110, $15, .clock
+    +step 1, 3200, 110, $12, .clock
+    +step 2, 2350, 110, $15, .clock
+    +step 1, 2350, 110, $12, .clock
+    +step 2, 3700, 110, $15, .clock
+    +step 2, 3700, 110, $11, .clock
+    !byte 0
+.fx102: ; 102: bd-crack, 38 ticks; Boulder Dash: Crack (Rauschen 736.6 Hz, 750 ms Decay)
+    +step 4, 110, 737, $48, .clock
+    +step 5, 110, 737, $47, .clock
+    +step 5, 110, 737, $46, .clock
+    +step 5, 110, 737, $45, .clock
+    +step 5, 110, 737, $44, .clock
+    +step 5, 110, 737, $43, .clock
+    +step 5, 110, 737, $42, .clock
+    +step 4, 110, 737, $41, .clock
+    !byte 0
+.fx103: ; 103: bd-timeout, 30 ticks; Boulder Dash: Zeit laeuft ab (577.5/593.1/608.7 Hz)
+    +step 2, 578, 110, $16, .clock
+    +step 3, 578, 110, $14, .clock
+    +step 3, 578, 110, $12, .clock
+    +step 2, 578, 110, $11, .clock
+    +step 2, 593, 110, $16, .clock
+    +step 3, 593, 110, $14, .clock
+    +step 3, 593, 110, $12, .clock
+    +step 2, 593, 110, $11, .clock
+    +step 2, 609, 110, $16, .clock
+    +step 3, 609, 110, $14, .clock
+    +step 3, 609, 110, $12, .clock
+    +step 2, 609, 110, $11, .clock
+    !byte 0
+.fx104: ; 104: bd-amoeba, 16 ticks; Boulder Dash: Amoebe (125-234 Hz)
+    +step 2, 160, 110, $13, .clock
+    +step 2, 210, 110, $14, .clock
+    +step 2, 130, 110, $13, .clock
+    +step 2, 190, 110, $14, .clock
+    +step 2, 145, 110, $13, .clock
+    +step 2, 225, 110, $14, .clock
+    +step 2, 175, 110, $13, .clock
+    +step 2, 135, 110, $14, .clock
+    !byte 0
     .export_table = *
     !word .fx0, .fx0
     !word .fx1, .fx1
@@ -647,6 +890,31 @@
     !word .fx77, .fx77
     !word .fx78, .fx78
     !word .fx79, .fx79
+    !word .fx80, .fx80
+    !word .fx81, .fx81
+    !word .fx82, .fx82
+    !word .fx83, .fx83
+    !word .fx84, .fx84
+    !word .fx85, .fx85
+    !word .fx86, .fx86
+    !word .fx87, .fx87
+    !word .fx88, .fx88
+    !word .fx89, .fx89
+    !word .fx90, .fx90
+    !word .fx91, .fx91
+    !word .fx92, .fx92
+    !word .fx93, .fx93
+    !word .fx94, .fx94
+    !word .fx95, .fx95
+    !word .fx96, .fx96
+    !word .fx97, .fx97
+    !word .fx98, .fx98
+    !word .fx99, .fx99
+    !word .fx100, .fx100
+    !word .fx101, .fx101
+    !word .fx102, .fx102
+    !word .fx103, .fx103
+    !word .fx104, .fx104
     !if * - .export_table != SFX_COUNT*4 { !error "Catalog pointer table size" }
 }
 !zone pal_data {
@@ -660,11 +928,17 @@ sfx_flags:
     !byte 0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0
     !byte 1,1,1,1,1
     !byte 0,0,0,0,0
+    !byte 0,0,0,0,0,0,0,0,0,0
+    !byte 0,0,0,0,0,0,0,0,0,3
+    !byte 0,0,0,0,1
 sfx_durations:
     !byte 30,30,20,25,13,6,10,10,25,25,2,6,6,10,8,9,13,5,10,30,4,5,20,20,25,8,10,12,15,40,10,8,10,13,20,13,20,10,2,18,30,20,30,25,3,15,18,30,40,13
     !byte 7,3,7,13,13,8,8,29,25,12,10,18,12,50,11,14,32,21,12,28
     !byte 12,8,16,12,16
     !byte 14,14,22,26,24
+    !byte 14,11,18,30,18,7,8,13,36,10
+    !byte 18,10,12,9,13,8,14,14,26,8
+    !byte 4,10,38,30,16
 sfx_names:
     !word sfx_name_0
     !word sfx_name_1
@@ -746,6 +1020,31 @@ sfx_names:
     !word sfx_name_77
     !word sfx_name_78
     !word sfx_name_79
+    !word sfx_name_80
+    !word sfx_name_81
+    !word sfx_name_82
+    !word sfx_name_83
+    !word sfx_name_84
+    !word sfx_name_85
+    !word sfx_name_86
+    !word sfx_name_87
+    !word sfx_name_88
+    !word sfx_name_89
+    !word sfx_name_90
+    !word sfx_name_91
+    !word sfx_name_92
+    !word sfx_name_93
+    !word sfx_name_94
+    !word sfx_name_95
+    !word sfx_name_96
+    !word sfx_name_97
+    !word sfx_name_98
+    !word sfx_name_99
+    !word sfx_name_100
+    !word sfx_name_101
+    !word sfx_name_102
+    !word sfx_name_103
+    !word sfx_name_104
 SFX_JINGLE_WIN = 0
 sfx_name_0: !pet "jingle-win",0
 SFX_JINGLE_LOSE = 1
@@ -907,6 +1206,56 @@ SFX_LIFE_SAD = 78
 sfx_name_78: !pet "life-sad",0
 SFX_LIFE_WOBBLE = 79
 sfx_name_79: !pet "life-wobble",0
+SFX_MARIO_COIN = 80
+sfx_name_80: !pet "mario-coin",0
+SFX_MARIO_JUMP = 81
+sfx_name_81: !pet "mario-jump",0
+SFX_MARIO_1UP = 82
+sfx_name_82: !pet "mario-1up",0
+SFX_MARIO_MUSHROOM = 83
+sfx_name_83: !pet "mario-mushroom",0
+SFX_MARIO_PIPE = 84
+sfx_name_84: !pet "mario-pipe",0
+SFX_MARIO_FIREBALL = 85
+sfx_name_85: !pet "mario-fireball",0
+SFX_MARIO_STOMP = 86
+sfx_name_86: !pet "mario-stomp",0
+SFX_MARIO_BRICK = 87
+sfx_name_87: !pet "mario-brick",0
+SFX_MARIO_FLAGPOLE = 88
+sfx_name_88: !pet "mario-flagpole",0
+SFX_MARIO_SPIN = 89
+sfx_name_89: !pet "mario-spin",0
+SFX_ANGRY_LAUNCH = 90
+sfx_name_90: !pet "angry-launch",0
+SFX_FRUIT_SLICE = 91
+sfx_name_91: !pet "fruit-slice",0
+SFX_FLAPPY_POINT = 92
+sfx_name_92: !pet "flappy-point",0
+SFX_TEMPLE_COIN = 93
+sfx_name_93: !pet "temple-coin",0
+SFX_CANDY_MATCH = 94
+sfx_name_94: !pet "candy-match",0
+SFX_SUBWAY_JUMP = 95
+sfx_name_95: !pet "subway-jump",0
+SFX_CUTROPE_SNIP = 96
+sfx_name_96: !pet "cutrope-snip",0
+SFX_DOODLE_SPRING = 97
+sfx_name_97: !pet "doodle-spring",0
+SFX_POKEMONGO_CATCH = 98
+sfx_name_98: !pet "pokemongo-catch",0
+SFX_JETPACK_THRUST = 99
+sfx_name_99: !pet "jetpack-thrust",0
+SFX_BD_BOULDER = 100
+sfx_name_100: !pet "bd-boulder",0
+SFX_BD_DIAMOND_FALL = 101
+sfx_name_101: !pet "bd-diamond-fall",0
+SFX_BD_CRACK = 102
+sfx_name_102: !pet "bd-crack",0
+SFX_BD_TIMEOUT = 103
+sfx_name_103: !pet "bd-timeout",0
+SFX_BD_AMOEBA = 104
+sfx_name_104: !pet "bd-amoeba",0
 
 !if sfx_durations - sfx_flags != SFX_COUNT { !error "Exactly SFX_COUNT flags required" }
 !if sfx_names - sfx_durations != SFX_COUNT { !error "Exactly SFX_COUNT durations required" }

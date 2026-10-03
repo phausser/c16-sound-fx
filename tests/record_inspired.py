@@ -1,4 +1,4 @@
-"""Record game-inspired IDs 50-69 sequentially in real PAL VICE."""
+"""Record a range of effect IDs (default 50-69) sequentially in real PAL VICE."""
 from pathlib import Path
 from array import array
 import argparse
@@ -28,7 +28,19 @@ looping = args.cycles > 1
 if looping:
     flag_offset = 2 + symbols['sfx_flags'] - load
     assert all(prg[flag_offset + i] & 1 for i in range(args.first, args.last + 1))
-prefix = build / ('wing-loops-pal' if looping else 'life-lost-pal' if args.first >= 75 else 'game-inspired-pal')
+if looping:
+    name = 'wing-loops-pal'
+elif args.first >= 100:
+    name = 'boulder-dash-pal'
+elif args.first >= 90:
+    name = 'ios-pal'
+elif args.first >= 80:
+    name = 'mario-pal'
+elif args.first >= 75:
+    name = 'life-lost-pal'
+else:
+    name = 'game-inspired-pal'
+prefix = build / name
 commands = ['delete 1', 'warp off']
 if looping:
     commands += ['keybuf "l"', f"until ${symbols['toggle_loop']:04x}",

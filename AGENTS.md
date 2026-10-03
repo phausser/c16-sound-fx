@@ -2,14 +2,14 @@
 
 ## Ziel und Dokumentation
 
-Dieses Projekt entwickelt mit ACME eine C16-Demo mit 80 TED-Soundeffekten und einer separat nutzbaren Spiele-Soundengine. Verbindliche Anforderungen stehen in `SPEC.md`, der Arbeitsplan in `docs/status.md`. Die `README.md` bleibt eine Kurzanleitung für Build, Start und Bedienung. Technischer Stand, Prüfergebnisse und offene Einschränkungen gehören nach `docs/`, insbesondere `docs/status.md` und `docs/engine.md`. Geplante Funktionen ausdrücklich als geplant kennzeichnen.
+Dieses Projekt entwickelt mit ACME eine C16-Demo mit 105 TED-Soundeffekten und einer separat nutzbaren Spiele-Soundengine. Verbindliche Anforderungen stehen in `SPEC.md`, der Arbeitsplan in `docs/status.md`. Die `README.md` bleibt eine Kurzanleitung für Build, Start und Bedienung. Technischer Stand, Prüfergebnisse und offene Einschränkungen gehören nach `docs/`, insbesondere `docs/status.md` und `docs/engine.md`. Geplante Funktionen ausdrücklich als geplant kennzeichnen.
 
 ## Umsetzung
 
 - Zielgerät: unveränderter C16 mit 16 KB RAM; PAL als Referenz, NTSC gemäß Spezifikation.
 - ACME-Syntax und 6502/8501-kompatible Befehle verwenden.
 - Soundengine und Menü getrennt halten. Wiedergabe darf nicht blockieren.
-- Bestehende Effekt-IDs 0–49 unverändert erhalten; zusätzliche Vorbild-Effekte 50–69 und Flügelschlag-Loops 70–79. Genau 80 eindeutige Namen.
+- Bestehende Effekt-IDs 0–49 unverändert erhalten; zusätzliche Vorbild-Effekte 50–69, Flügelschlag-Loops 70–74, Lebensverlust 75–79, Mario-Vorbilder 80–89 und iOS-Vorbilder 90–99 und Boulder-Dash-Vorbilder 100–104. Genau 105 eindeutige Namen.
 - Spielvorbilder sind stilisierte TED-Nachbildungen; keine Originalsamples, Sprachnachbildung nur als Tonkontur. Quellen und Grenzen in `docs/game-inspired.md` festhalten, keine gemessene Popularitätsrangliste behaupten.
 - Tabellenadressierung für IDs ab 64 mitprüfen; Vier-Byte-Einträge benötigen einen 9-Bit-Index.
 - Fremde TED-Registerbits erhalten, insbesondere die Videobits in `$FF12`.
@@ -19,13 +19,13 @@ Dieses Projekt entwickelt mit ACME eine C16-Demo mit 80 TED-Soundeffekten und ei
 
 ## Verbindlicher Menüstand
 
-- Vier Katalogseiten mit 24/24/24/8 Einträgen; alle 24 Zeilen unter der Kopfzeile für die Liste nutzen, keine Status- oder Fußzeile.
-- Inverse Titelleiste: `C=16 Sound FX`, `Loop: ON/OFF` vor `(H)elp`, rechts `1/4` bis `4/4`.
+- Fünf Katalogseiten mit 24/24/24/24/9 Einträgen; alle 24 Zeilen unter der Kopfzeile für die Liste nutzen, keine Status- oder Fußzeile.
+- Inverse Titelleiste: `C=16 Sound FX`, `Loop: ON/OFF` vor `(H)elp`, rechts `1/5` bis `5/5`.
 - Kategorie in Klammern vor dem Namen; Namen beginnen in Spalte 20 (nullbasiert). Kategorien zusammenhängend sortieren, Fortsetzung über Seitengrenzen zulässig.
-- Reihenfolge nur im Menü ändern; Effekt-IDs und API bleiben 0–79. Jede ID genau einmal anzeigen.
+- Reihenfolge nur im Menü ändern; Effekt-IDs und API bleiben 0–104. Jede ID genau einmal anzeigen.
 - H öffnet/schließt die separate Hilfe; RETURN/SPACE kehrt zurück. Auswahl und laufenden Sound erhalten.
 - Hintergrund und Rahmen verwenden `TED_BG_COLOR` aus `src/ted.inc` (aktuell `$36`), Schrift `TED_WHITE` (`$71`). Benutzeränderungen an der Farbe erhalten.
-- Direkte numerische ID-Eingabe bleibt verfügbar, ohne separate Eingabeanzeige.
+- Direkte numerische ID-Eingabe (bis drei Ziffern) bleibt verfügbar, ohne separate Eingabeanzeige. IDs ab 100 dreistellig anzeigen; Namen bleiben in Spalte 20.
 - KERNAL-Wiederholung während der Demo sperren und beim Exit zurückgeben. Navigation: 0,5 s Vorlauf, dann 0,1 s Intervall auf PAL und NTSC.
 - Seitenzahl, Grenzen und Tabellen aus `SFX_COUNT`/`SFX_PAGE_COUNT` ableiten; maximal 24 Einträge je Seite. Flügelschlag-Loops enthalten gestaltete Ruhephasen, keine zusätzliche Endmarker-Pause.
 - Menüfreies Beispiel in `examples/game_integration.asm`; mit `make example` bauen und `make test-example-vice` prüfen.

@@ -9,7 +9,7 @@ Einmal `sfx_init` vor der ersten Nutzung, dann `sfx_tick` exakt einmal pro Video
 | Routine | Eingabe und Verhalten |
 |---|---|
 | `sfx_init` | A=0 PAL, A=1 NTSC; sichert Register und schaltet Sound aus; andere Werte: C=1, unverändert |
-| `sfx_play` | A=ID 0–79; ersetzt Wiedergabe und setzt sofort den ersten Schritt; C=0; andere IDs: C=1, unverändert |
+| `sfx_play` | A=ID 0–104; ersetzt Wiedergabe und setzt sofort den ersten Schritt; C=0; andere IDs: C=1, unverändert |
 | `sfx_tick` | Ein Aufruf pro Frame; höchstens ein hörbarer Schrittwechsel; Carry ohne Bedeutung |
 | `sfx_stop` | Sound aus, Wiedergabe und Wiederholung verworfen |
 | `sfx_set_loop` | A=0/1, C=0; Abschalten beendet den aktuellen Durchlauf regulär; andere Werte: C=1, unverändert |
@@ -25,15 +25,15 @@ Jeder ID-Eintrag enthält zwei 16-Bit-Adressen: Start und Wiederholungseinstieg.
 
 PAL: jeder Frame ist ein logischer Tick. NTSC: ein Akkumulator addiert 50 je Frame und erzeugt bei mindestens 60 einen Tick; pro 60 Aufrufen entstehen 50 logische Ticks. Die Phase läuft unabhängig von der Wiedergabe weiter. Frequenzdaten liegen separat für PAL und NTSC vor und werden mit gerundeten Konstanten 110840 bzw. 111861 aus der dokumentierten TED-Formel erzeugt.
 
-Alle 80 stabilen IDs haben eigene, nicht leere Abläufe; Namen, Dauern und Loopflags werden gegen `SPEC.md` geprüft. Der Katalog enthält 387 Schritte, beide Taktvarianten und 80 PETSCII-Namen samt Zeigertabelle. Details: [effects.md](effects.md).
+Alle 105 stabilen IDs haben eigene, nicht leere Abläufe; Namen, Dauern und Loopflags werden gegen `SPEC.md` geprüft. Der Katalog enthält 580 Schritte, beide Taktvarianten und 105 PETSCII-Namen samt Zeigertabelle. Details: [effects.md](effects.md).
 
 ## Prüfungen und Grenzen
 
-`make test` führt mit py65 1.2.0 den wirklich assemblierten 6502-Code aus. Geprüft: alle 80 gültigen Slots, ungültige IDs/Init-/Loop-Werte ohne Zustandsänderung, Neustart, exakte PAL-/NTSC-Dauern, Stop, Loop-Abschaltung, 200-ms-Pause, unterbrechungsfreie Alarmzyklen, separater Wiederholungseinstieg, Daten über eine Seitengrenze, Schreibbereiche und aktuelle fremde Registerbits auch beim Shutdown.
+`make test` führt mit py65 1.2.0 den wirklich assemblierten 6502-Code aus. Geprüft: alle 105 gültigen Slots, ungültige IDs/Init-/Loop-Werte ohne Zustandsänderung, Neustart, exakte PAL-/NTSC-Dauern, Stop, Loop-Abschaltung, 200-ms-Pause, unterbrechungsfreie Alarmzyklen, separater Wiederholungseinstieg, Daten über eine Seitengrenze, Schreibbereiche und aktuelle fremde Registerbits auch beim Shutdown.
 
-Gemessen am aktuellen Build: maximal **332 CPU-Zyklen pro getesteten Tick**, inklusive API-RTS; 512 Bytes Enginecode (einschließlich vier veränderlicher Operandbytes), 20 Bytes zusätzlicher Zustand, 6642 Bytes Katalogdaten, Tabellen und Namen. Engine samt Daten: 7174 Bytes; Zero Page: 0 Bytes. Die Katalogdemo belegt 9559 Bytes ab `$1001` bis `$3557`; PRG inklusive Ladeadresse: 9561 Bytes. Die Zyklusmessung zählt CPU-Instruktionszyklen, keine TED-DMA-Verzögerungen oder IRQ-Arbeit; sie ist keine Hardware-Wallclockmessung.
+Gemessen am aktuellen Build: maximal **332 CPU-Zyklen pro getesteten Tick**, inklusive API-RTS; 512 Bytes Enginecode (einschließlich vier veränderlicher Operandbytes), 20 Bytes zusätzlicher Zustand, 9671 Bytes Katalogdaten, Tabellen und Namen. Engine samt Daten: 10203 Bytes; Zero Page: 0 Bytes. Die Katalogdemo belegt 12032 Bytes ab `$1001` bis `$3F00`; PRG inklusive Ladeadresse: 12034 Bytes. Die Hilfeseite ist als nullterminierte Zeilen gespeichert. Bis `$3FFF` bleiben 255 Bytes frei; weitere Effekte erfordern vorher Speicherarbeit. Die Zyklusmessung zählt CPU-Instruktionszyklen, keine TED-DMA-Verzögerungen oder IRQ-Arbeit; sie ist keine Hardware-Wallclockmessung.
 
-`make test-vice` prüft VICE 3.10 mit C16, 16 KB RAM, jeweils PAL und NTSC: Autostart, Bildschirmtext im echten Bildschirm-RAM, alle 80 Starts per KERNAL-Tastaturpuffer, automatisches Ende, fünfzehn Loops mit Stop, numerische ID-Eingabe und Erhaltung der Videobits und Q-Rückkehr in den BASIC-ROM-Code bei `$A7CF`. Der Test benutzt den Dummy-Audiotreiber und ersetzt keine Hörprüfung. Monitorbefehle folgen dem [VICE-Monitorhandbuch](https://vice-emu.sourceforge.io/vice_12.html). Logs und Registeraufnahmen liegen unter `build/`.
+`make test-vice` prüft VICE 3.10 mit C16, 16 KB RAM, jeweils PAL und NTSC: Autostart, Bildschirmtext im echten Bildschirm-RAM, alle 105 Starts per KERNAL-Tastaturpuffer (ab 100 dreistellig), automatisches Ende, siebzehn Loops mit Stop, numerische ID-Eingabe und Erhaltung der Videobits und Q-Rückkehr in den BASIC-ROM-Code bei `$A7CF`. Der Test benutzt den Dummy-Audiotreiber und ersetzt keine Hörprüfung. Monitorbefehle folgen dem [VICE-Monitorhandbuch](https://vice-emu.sourceforge.io/vice_12.html). Logs und Registeraufnahmen liegen unter `build/`.
 
 Offen bleiben Hörprüfung und Klangabstimmung, echte Hardware sowie die manuelle Bedienprüfung mit gehaltenen Host-Tasten. Die Demo deaktiviert die KERNAL-Wiederholung während der Nutzung und steuert Cursortastenwiederholung selbst. CPU-Tests prüfen die Wiederholungsintervalle auf PAL/NTSC; VICE prüft Kategorienseiten, separate Hilfe und Navigation während Loops. Katalog und Hilfe sind per Screenshot visuell geprüft.
 
@@ -52,7 +52,7 @@ Soundereignissen. SPACE startet Sprung (15), F Schuss (25), C Sammeln (5),
 L Motorloop (41), S/RUN-STOP stoppt, Q gibt Sound und KERNAL-Wiederholung
 zurück. P/N wählt die passende Zeitbasis.
 
-Nutzlast: 7563 Bytes (`$1001–$2D8B`), inklusive
+Nutzlast: 10541 Bytes (`$1001–$392D`), inklusive
 vollständigem Katalog. `make test-example-vice` prüft auf PAL und NTSC mit
 16 KB drei Ereignisstarts und natürliche Enden, fortgesetzte Spielbewegung
 während des Motorloops, Stop sowie Rückkehr in BASIC. Frequenz-/Zeittests
@@ -64,14 +64,14 @@ Spielvorbilder. Die alte Starttabelle bleibt als Vier-Byte-Einträge erhalten;
 zwei Operandbytes sind private, beschreibbare Enginebytes. Prüfungen und
 Gestaltungsgrenzen: [game-inspired.md](game-inspired.md).
 
-Flügelschlag-Loops 70–79: [wing-loops.md](wing-loops.md). Sie starten über dieselbe API; Wiederholung explizit mit `sfx_set_loop(1)` aktivieren.
+Flügelschlag-Loops 70–74: [wing-loops.md](wing-loops.md). Mario- und iOS-Vorbilder 80–99: [mario-ios.md](mario-ios.md). Boulder Dash 100–104: [boulder-dash.md](boulder-dash.md). Sie starten über dieselbe API; Wiederholung explizit mit `sfx_set_loop(1)` aktivieren.
 
 ## Einen Effekt einbauen und leiser abstimmen
 
 Das vollständige, geprüfte Beispiel steht in `examples/game_integration.asm`.
 Im eigenen ACME-Programm `src/ted.inc` einbinden, Programmcode anlegen,
 danach `src/sfx_engine.asm` und `src/sfx_data.asm` einbinden. Der vollständige
-Engine-/Katalogblock benötigt derzeit 7174 Bytes; er und der Spielcode
+Engine-/Katalogblock benötigt derzeit 10203 Bytes; er und der Spielcode
 müssen gemeinsam unter `$4000` bleiben. Nur die `.fx`-Schritte zu kopieren
 reicht nicht: API, Tabellen, Loopflags und PAL/NTSC-Daten gehören dazu.
 

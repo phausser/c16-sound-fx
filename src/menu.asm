@@ -206,6 +206,11 @@ menu_draw:
     lda #' '
     jsr menu_put
     lda #4
+    ldx menu_effect_id
+    cpx #100
+    bcc +
+    lda #5                   ; three-digit ID shifts category, not name
++
     sta menu_column
     ldx menu_item
     lda menu_categories,x
@@ -270,6 +275,14 @@ menu_load:
     jmp menu_status
 
 menu_number:
+    cmp #100
+    bcc .two_digits
+    sbc #100                 ; carry set
+    pha
+    lda #'1'
+    jsr menu_put
+    pla
+.two_digits:
     ldx #'0'
 .tens:
     cmp #10
@@ -339,55 +352,77 @@ menu_draw_help:
     sta menu_help_load+1
     lda #>menu_help_text
     sta menu_help_load+2
-    ldx #0
-    ldy #0
+    ldx #0                    ; row; row 0 is the inverse header
+menu_help_row:
+    ldy #0                    ; column
 menu_help_copy:
 menu_help_load:
     lda $ffff
+    beq menu_help_end
+    jsr menu_help_put
+    jsr menu_help_next
+    iny
+    bne menu_help_copy
+menu_help_end:
+    jsr menu_help_next        ; skip line terminator
+menu_help_pad:
+    cpy #40
+    beq menu_help_line_done
+    lda #' '
+    jsr menu_help_put
+    iny
+    bne menu_help_pad
+menu_help_line_done:
+    inx
+    cpx #25
+    bne menu_help_row
+    jmp menu_status
+menu_help_put:
     cpx #0
     bne +
     ora #$80
 +
-    jsr menu_put
+    jmp menu_put
+menu_help_next:
     inc menu_help_load+1
     bne +
     inc menu_help_load+2
 +
-    iny
-    cpy #40
-    bne menu_help_copy
-    ldy #0
-    inx
-    cpx #25
-    bne menu_help_copy
-    jmp menu_status
+    rts
+; Zero-terminated rows, padded with spaces to 40 columns when drawn.
+!macro help_line .text {
+    .start = *
+    !scr .text
+    !if * - .start > 40 { !error "Help row exceeds 40 columns" }
+    !byte 0
+}
 menu_help_text:
-    !scr "c=16 sound fx  loop: off  (h)elp     hlp"
-    !scr "                                        "
-    !scr "cursor up/down: select effect           "
-    !scr "cursor left/right: change page          "
-    !scr "                                        "
-    !scr "return / space: start or restart        "
-    !scr "00-79 then return: start by api id      "
-    !scr "                                        "
-    !scr "l: toggle loop                          "
-    !scr "s / run-stop: stop sound and loop       "
-    !scr "                                        "
-    !scr "p: pal timing / n: ntsc timing          "
-    !scr "match timing to emulator or hardware    "
-    !scr "                                        "
-    !scr "q: exit to basic                        "
-    !scr "                                        "
-    !scr "h / return / space: back to catalog     "
-    !scr "                                        "
-    !scr "navigation does not change playing fx   "
-    !scr "                                        "
-    !scr "                                        "
-    !scr "                                        "
-    !scr "                                        "
-    !scr "                                        "
-    !scr "                                        "
-!if * - menu_help_text != 1000 { !error "Help must fill 25 rows" }
+    +help_line "c=16 sound fx  loop: off  (h)elp     hlp"
+    !byte 0
+    +help_line "cursor up/down: select effect"
+    +help_line "cursor left/right: change page"
+    !byte 0
+    +help_line "return / space: start or restart"
+    +help_line "0-104 then return: start by api id"
+    !byte 0
+    +help_line "l: toggle loop"
+    +help_line "s / run-stop: stop sound and loop"
+    !byte 0
+    +help_line "p: pal timing / n: ntsc timing"
+    +help_line "match timing to emulator or hardware"
+    !byte 0
+    +help_line "q: exit to basic"
+    !byte 0
+    +help_line "h / return / space: back to catalog"
+    !byte 0
+    +help_line "navigation does not change playing fx"
+    !byte 0
+    !byte 0
+    !byte 0
+    !byte 0
+    !byte 0
+    !byte 0
+!if * - menu_help_text > 1000 { !error "Help text too large" }
 
 ; Called once per video frame. No held actions are synthesized.
 menu_keyboard_tick:
@@ -430,9 +465,9 @@ menu_repeat_delay: !byte 25,30
 menu_repeat_interval: !byte 5,6
 
 menu_order:
-    !byte 0,1,2,3,4,8,9,39,69,75,76,77,78,79,5,6,7,51,54,64,67,10,11,12,13,14,43,44,45,57,66,68,15,16,17,18,19,20,21,22,23,24,70,71,72,73,74,41,42,62,46,47,48,63,36,37,38,40,53,60,61,25,26,27,30,50,52,56,58,59,65,28,29,31,32,33,34,35,49,55
+    !byte 0,1,2,3,4,8,9,39,69,75,76,77,78,79,82,83,84,94,98,5,6,7,51,54,64,67,80,92,93,10,11,12,13,14,43,44,45,57,66,68,102,103,15,16,17,18,19,20,21,22,23,24,70,71,72,73,74,81,88,89,90,95,97,41,42,62,99,46,47,48,63,104,36,37,38,40,53,60,61,87,96,100,101,25,26,27,30,50,52,56,58,59,65,85,28,29,31,32,33,34,35,49,55,86,91
 menu_categories:
-    !byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,2,2,2,2,2,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,5,5,5,6,6,6,6,7,7,7,7,7,7,7,8,8,8,8,8,8,8,8,8,8,9,9,10,10,10,10,10,10,10
+    !byte 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,3,3,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,5,5,5,5,6,6,6,6,6,7,7,7,7,7,7,7,7,7,7,7,8,8,8,8,8,8,8,8,8,8,8,9,9,10,10,10,10,10,10,10,10,10
 menu_category_names:
     !word menu_category_0,menu_category_1,menu_category_2,menu_category_3,menu_category_4,menu_category_5,menu_category_6,menu_category_7,menu_category_8,menu_category_9,menu_category_10
 menu_category_0: !scr "(jingle)"

@@ -1,6 +1,6 @@
 # Effektkatalog – Schritt 3
 
-Der ursprüngliche Katalog (IDs 0–49) besitzt 208 Schritte. Die Erweiterung auf 80 IDs hat insgesamt 387 Schritte; die neuen Vorbild-Effekte sind in `game-inspired.md` beschrieben. Tonfolgen, Frequenzbögen, Rauschhüllkurven, verstimmte Tonpaare und kombinierte Quellen werden als begrenzte Datenstreams gespeichert. Kombinationen teilen eine Lautstärke und verwenden Ton 1 plus Rauschen; Metall-/Motoreffekte nutzen bewusst beide Tonkanäle.
+Der ursprüngliche Katalog (IDs 0–49) besitzt 208 Schritte. Die Erweiterung auf 105 IDs hat insgesamt 580 Schritte; die Vorbild-Effekte sind in `game-inspired.md`, `mario-ios.md` und `boulder-dash.md` beschrieben. Tonfolgen, Frequenzbögen, Rauschhüllkurven, verstimmte Tonpaare und kombinierte Quellen werden als begrenzte Datenstreams gespeichert. Kombinationen teilen eine Lautstärke und verwenden Ton 1 plus Rauschen; Metall-/Motoreffekte nutzen bewusst beide Tonkanäle.
 
 Die folgende Dauer ergibt sich aus den Schrittdaten bei 50 logischen Ticks/s. Ziele zwischen zwei Ticks werden auf den nächsten Tick gerundet (z. B. 0,25 s auf 13 Ticks / 0,26 s). Unter NTSC ist der erste/letzte Frame zusätzlich von der laufenden Akkumulatorphase abhängig. Getrennte 10-Bit-Frequenzwerte berücksichtigen den jeweiligen TED-Takt; die größte rechnerische PAL-/NTSC-Abweichung der nominalen Frequenzen im ursprünglichen Katalog beträgt 1,32 % durch Registerquantisierung.
 
@@ -93,3 +93,11 @@ IDs 70–74 ergänzen fünf zyklische Flügelschlag-Varianten in BEWEGUNG. Alle 
 IDs 75–79 ergänzen fünf einmalige Lebensverlust-Sounds unter JINGLE.
 Der Katalog umfasst jetzt 80 Effekte, vier Seiten (24/24/24/8) und weiterhin 15 Loops.
 Details und drei Flappy-Bird-Beispiele: [life-lost.md](life-lost.md).
+
+## Mario und iOS
+
+IDs 80–99 ergänzen zehn Mario- und zehn iOS-Spielvorbilder, einsortiert in bestehende Kategorien. Der Katalog umfasst jetzt 100 Effekte, fünf Seiten (24/24/24/24/4) und 16 Loops (neu: `jetpack-thrust`). Details: [mario-ios.md](mario-ios.md).
+
+## Boulder Dash
+
+IDs 100–104 ergänzen fünf Boulder-Dash-Vorbilder (C64) nach einer SID-Analyse. Der Katalog umfasst jetzt 105 Effekte, fünf Seiten (24/24/24/24/9) und 17 Loops (neu: `bd-amoeba`). Details: [boulder-dash.md](boulder-dash.md).

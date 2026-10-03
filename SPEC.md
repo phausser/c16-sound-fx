@@ -2,7 +2,7 @@
 
 ## Ziel und Umfang
 
-Ein mit ACME assembliertes Programm für den Commodore 16 zeigt eine Liste mit genau 80 benannten Soundeffekten. Der Benutzer wählt einen Effekt und spielt ihn ab. Die Effekte sind für Spiele gedacht: kurze Geräusche, kurze Tonfolgen und wiederholbare Geräuschzyklen, keine Musikstücke. Diese Spezifikation definiert den Zielumfang; der tatsächliche Umsetzungs- und Prüfstand steht in `docs/status.md`.
+Ein mit ACME assembliertes Programm für den Commodore 16 zeigt eine Liste mit genau 105 benannten Soundeffekten. Der Benutzer wählt einen Effekt und spielt ihn ab. Die Effekte sind für Spiele gedacht: kurze Geräusche, kurze Tonfolgen und wiederholbare Geräuschzyklen, keine Musikstücke. Diese Spezifikation definiert den Zielumfang; der tatsächliche Umsetzungs- und Prüfstand steht in `docs/status.md`.
 
 Zielgerät ist ein unveränderter C16 mit 16 KB RAM, zunächst PAL. C116 und Plus/4 sollen ohne zusätzliche Hardware funktionieren. NTSC wird über eine explizite Zeitbasis und passende Frequenzwerte unterstützt und separat geprüft.
 
@@ -17,8 +17,8 @@ Relevante Register: `$FF0E` (Ton 1, Frequenz unten), `$FF0F` (Ton 2/Rauschen, Fr
 ## Bedienung und Anzeige
 
 - 40 × 25 Zeichen, PETSCII-kompatible Namen ohne Umlaute.
-- Vier Seiten: 24, 24, 24 und 8 Einträge; ein Eintrag pro Zeile mit ID und Name.
-- Inverse Kopfzeile mit `C=16 Sound FX`, Loopstatus `ON/OFF` vor `(H)elp` und rechts Seite `1/4` bis `4/4`; alle 24 Zeilen darunter sind Listeneinträgen vorbehalten, ohne Status- oder Fußzeile. Hintergrund und Rahmen verwenden den konfigurierbaren Wert `TED_BG_COLOR` (aktuell `$36`), weiße Schrift (`$71`).
+- Fünf Seiten: 24, 24, 24, 24 und 9 Einträge; ein Eintrag pro Zeile mit ID und Name.
+- Inverse Kopfzeile mit `C=16 Sound FX`, Loopstatus `ON/OFF` vor `(H)elp` und rechts Seite `1/5` bis `5/5`; alle 24 Zeilen darunter sind Listeneinträgen vorbehalten, ohne Status- oder Fußzeile. Hintergrund und Rahmen verwenden den konfigurierbaren Wert `TED_BG_COLOR` (aktuell `$36`), weiße Schrift (`$71`).
 - Anzeige nach zusammenhängenden Kategorien sortieren; vor jedem Namen `(KATEGORIE)` zeigen; Namen beginnen in Spalte 20 (nullbasiert). Kategorien dürfen über Seitenwechsel weiterlaufen. Sortierung verändert die stabilen IDs nicht.
 - Separate Hilfeseite mit allen Tastaturbefehlen: H öffnet/schließt sie; RETURN/SPACE kehrt zum Katalog zurück. Auswahl und laufende Wiedergabe bleiben erhalten. Navigation und ID-Eingabe sind auf der Hilfeseite gesperrt; Loop, Stop, Videostandardwechsel und Exit bleiben verfügbar.
 - Cursor hoch/runter: Auswahl; links/rechts: Seite. Auswahlgrenzen werden begrenzt, kein unbeabsichtigtes Umspringen.
@@ -31,7 +31,7 @@ Relevante Register: `$FF0E` (Ton 1, Frequenz unten), `$FF0F` (Ton 2/Rauschen, Fr
 
 ## Effektkatalog
 
-IDs sind zugleich stabile API-IDs (0–79). T = Ton, R = Rauschen, T+R = Kombination. Zeiten sind ungefähre Gestaltungsziele, keine bereits gemessenen Werte. „Loop“ kennzeichnet einen bewusst gestalteten wiederholbaren Zyklus; alle anderen Effekte sind kurze Einzeleffekte.
+IDs sind zugleich stabile API-IDs (0–104). T = Ton, R = Rauschen, T+R = Kombination. Zeiten sind ungefähre Gestaltungsziele, keine bereits gemessenen Werte. „Loop“ kennzeichnet einen bewusst gestalteten wiederholbaren Zyklus; alle anderen Effekte sind kurze Einzeleffekte.
 
 | ID | Name | Quelle | Zielzeit | Charakter / Einsatz | Loop |
 |---:|---|---|---|---|:---:|
@@ -115,6 +115,31 @@ IDs sind zugleich stabile API-IDs (0–79). T = Ton, R = Rauschen, T+R = Kombina
 | 77 | life-sigh | T | 0,44 s | Leben verloren: sigh | |
 | 78 | life-sad | T | 0,52 s | Leben verloren: sad | |
 | 79 | life-wobble | T | 0,48 s | Leben verloren: wobble | |
+| 80 | mario-coin | T | 0,28 s | Super Mario Bros.: Muenze – stilisierte TED-Annäherung |  |
+| 81 | mario-jump | T | 0,22 s | Super Mario Bros.: Sprung – stilisierte TED-Annäherung |  |
+| 82 | mario-1up | T | 0,36 s | Super Mario Bros.: Extraleben – stilisierte TED-Annäherung |  |
+| 83 | mario-mushroom | T | 0,60 s | Super Mario Bros.: Power-up-Pilz – stilisierte TED-Annäherung |  |
+| 84 | mario-pipe | T | 0,36 s | Super Mario Bros.: Rohr/Schrumpfen – stilisierte TED-Annäherung |  |
+| 85 | mario-fireball | T | 0,14 s | Super Mario Bros.: Feuerball – stilisierte TED-Annäherung |  |
+| 86 | mario-stomp | T+R | 0,16 s | Super Mario Bros.: Gegner zertreten – stilisierte TED-Annäherung |  |
+| 87 | mario-brick | R | 0,26 s | Super Mario Bros.: Block zerbricht – stilisierte TED-Annäherung |  |
+| 88 | mario-flagpole | T | 0,72 s | Super Mario Bros.: Fahnenmast – stilisierte TED-Annäherung |  |
+| 89 | mario-spin | T+R | 0,20 s | Super Mario World: Wirbelsprung – stilisierte TED-Annäherung |  |
+| 90 | angry-launch | T+R | 0,36 s | Angry Birds: Schleuder – stilisierte TED-Annäherung |  |
+| 91 | fruit-slice | R | 0,20 s | Fruit Ninja: Schnitt – stilisierte TED-Annäherung |  |
+| 92 | flappy-point | T | 0,24 s | Flappy Bird: Punkt – stilisierte TED-Annäherung |  |
+| 93 | temple-coin | T | 0,18 s | Temple Run: Muenze – stilisierte TED-Annäherung |  |
+| 94 | candy-match | T | 0,26 s | Candy Crush Saga: Reihe – stilisierte TED-Annäherung |  |
+| 95 | subway-jump | T+R | 0,16 s | Subway Surfers: Sprung – stilisierte TED-Annäherung |  |
+| 96 | cutrope-snip | T+R | 0,28 s | Cut the Rope: Schnitt und Schlucken – stilisierte TED-Annäherung |  |
+| 97 | doodle-spring | T | 0,28 s | Doodle Jump: Sprungfeder – stilisierte TED-Annäherung |  |
+| 98 | pokemongo-catch | T | 0,52 s | Pokemon GO: Fang – stilisierte TED-Annäherung |  |
+| 99 | jetpack-thrust | T+R | 0,16 s | Jetpack Joyride: Duesenschub – stilisierte TED-Annäherung | ja |
+| 100 | bd-boulder | R | 0,08 s | Boulder Dash: Felsbrocken schieben/landen – Rauschen nach SID-Analyse |  |
+| 101 | bd-diamond-fall | T | 0,20 s | Boulder Dash: fallende Diamanten – drei Pings im SID-Frequenzbereich |  |
+| 102 | bd-crack | R | 0,76 s | Boulder Dash: Crack bei Rockfords Geburt und Ausgang – Rauschen mit 750-ms-Abklingen |  |
+| 103 | bd-timeout | T | 0,60 s | Boulder Dash: Zeit laeuft ab – letzte drei Sekundenpings, verdichtet |  |
+| 104 | bd-amoeba | T | 0,32 s | Boulder Dash: Amoebe – tiefes zufallsartiges Blubbern | ja |
 
 ## Architektur und Integration in Spiele
 
@@ -123,7 +148,7 @@ Die Wiedergabe wird vom Menü getrennt. Eine datengetriebene Engine spielt genau
 Öffentliche Routinen:
 
 - `sfx_init`: Zustand initialisieren, Sound ausschalten, gemeinsam genutzte Registerbits sichern.
-- `sfx_play`: A = ID 0–79; startet den Effekt ohne Warteschleife. Ungültige IDs liefern Carry gesetzt und lassen den bisherigen Zustand bestehen; gültige IDs liefern Carry gelöscht.
+- `sfx_play`: A = ID 0–104; startet den Effekt ohne Warteschleife. Ungültige IDs liefern Carry gesetzt und lassen den bisherigen Zustand bestehen; gültige IDs liefern Carry gelöscht.
 - `sfx_tick`: exakt einmal je Video-Frame vom aufrufenden Programm aufrufen; führt höchstens einen fälligen Effektschritt aus, ohne zu warten.
 - `sfx_stop`: stoppt alle von der Engine verwendeten Klangquellen und verwirft Wiederholung.
 - `sfx_set_loop`: A = 0/1; steuert Wiederholung. Ausschalten lässt den aktuellen Durchlauf zu Ende spielen.
@@ -147,14 +172,14 @@ ACME erzeugt ein CBM-PRG mit BASIC-SYS-Startstub ab `$1001`. Die tatsächliche S
 
 1. Reproduzierbarer ACME-Build liefert ein auf dem 16-KB-C16 startbares PRG.
    `make run` baut und startet die Demo in der installierten VICE-Version; die Effekte sind über deren Audioausgabe hörbar.
-2. Genau 80 stabile IDs und eindeutige Namen; alle Einträge sind erreichbar und spielbar.
+2. Genau 105 stabile IDs und eindeutige Namen; alle Einträge sind erreichbar und spielbar.
 3. Ton, Rauschen, kombinierte Effekte und kurze Tonfolgen sind vertreten.
 4. Alle Einzeleffekte enden selbständig und hinterlassen keine eingeschaltete Klangquelle.
 5. Wiederholung funktioniert bis zum Stop; gestaltete Loops haben keinen unbeabsichtigten stummen Frame am Zyklusübergang. Physikalisch völlig klickfreie Übergänge sind kein pauschales Versprechen.
 6. Navigation, Neustart, Stop und Exit funktionieren während der Wiedergabe; Stop wirkt spätestens im nächsten Frame.
 7. Keine Bildbeschädigung durch Soundregisterzugriffe, keine Speicherüberschreitung.
 8. Engine ist unabhängig vom Menü in ein kleines Beispielspiel integrierbar.
-9. Emulatorprüfung mit 16 KB RAM und Hörprüfung aller 80 Effekte; NTSC separat. Prüfung auf echter Hardware ist wünschenswert und wird nur bei tatsächlicher Durchführung als bestanden ausgewiesen.
+9. Emulatorprüfung mit 16 KB RAM und Hörprüfung aller 105 Effekte; NTSC separat. Prüfung auf echter Hardware ist wünschenswert und wird nur bei tatsächlicher Durchführung als bestanden ausgewiesen.
 10. Gemessene RAM-Nutzung und maximale Tick-Laufzeit werden in `docs/engine.md` festgehalten. Ziel für `sfx_tick`: höchstens 1.000 CPU-Zyklen pro Aufruf, ohne Menü und IRQ-Verwaltung; am langsameren CPU-Takt bewerten.
 
 ## Technische Referenzen

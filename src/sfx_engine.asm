@@ -23,7 +23,7 @@ sfx_init:
     clc
     rts
 
-; play: A=stable ID 0..74. Flag bit 0: seamless loop; bit 1: noise variation.
+; play: A=stable ID 0..SFX_COUNT-1. Flag bit 0: seamless loop; bit 1: noise variation.
 !zone sfx_play_zone
 sfx_play:
     cmp #SFX_COUNT

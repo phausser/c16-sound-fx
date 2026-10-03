@@ -80,13 +80,17 @@ poll:
     sbc #'0'
     sta input_digit
     lda input_digits
-    cmp #1
-    beq second_digit
+    beq first_digit
+    cmp #3
+    bcc next_digit            ; up to three digits form one ID
+first_digit:
     lda #0
     sta input_id
     sta input_digits
-second_digit:
+next_digit:
     lda input_id
+    cmp #26
+    bcs digit_overflow
     asl
     sta input_tens
     asl
@@ -94,6 +98,10 @@ second_digit:
     clc
     adc input_tens
     adc input_digit
+    bcc +
+digit_overflow:
+    lda #$ff                  ; values above 255 stay invalid
++
     sta input_id
     inc input_digits
 ignore_key:
@@ -105,7 +113,7 @@ play_input:
     lda menu_order,x
     sta input_id
 +
-    lda input_id            ; IDs 50..99 rejected without interrupting playback
+    lda input_id            ; IDs >= SFX_COUNT rejected without interrupting playback
     jsr sfx_play
     lda #0
     sta input_digits

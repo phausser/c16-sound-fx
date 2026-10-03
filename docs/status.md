@@ -5,8 +5,8 @@ Die README ist eine Kurzanleitung. Verbindliche Anforderungen stehen in
 
 ## Aktueller Stand
 
-- Nicht blockierende Engine und alle 80 stabilen Effekt-IDs/Namen implementiert.
-- Katalog nach Kategorien, vier Seiten mit 24/24/24/8 Einträgen; keine Status- oder Fußzeile.
+- Nicht blockierende Engine und alle 105 stabilen Effekt-IDs/Namen implementiert.
+- Katalog nach Kategorien, fünf Seiten mit 24/24/24/24/9 Einträgen; keine Status- oder Fußzeile.
 - Inverse Titelleiste: `C=16 Sound FX`, `Loop: ON/OFF`, `(H)elp`, Seite rechts.
 - Kategorie vor Namen; Namen ab Spalte 20. Kategorien dürfen über Seitenwechsel weiterlaufen.
 - Separate Hilfe mit H; RETURN/SPACE kehrt zurück. Sound und Auswahl bleiben erhalten.
@@ -37,15 +37,15 @@ Monitorbefehle und Logs liegen ausschließlich unter `build/`.
 | Kriterium | Ergebnis und Grenze |
 |---|---|
 | 1: Build, Start, hörbare Demo | ACME-Build und VICE-Autostart mit 16 KB bestehen; CoreAudio war geöffnet. Menschliche Hörprüfung offen. |
-| 2: 80 stabile IDs/Namen | CPU prüft eindeutigen Katalog und alle 80 sortierten Auswahlen; VICE startet alle IDs. |
+| 2: 105 stabile IDs/Namen | CPU prüft eindeutigen Katalog und alle 105 sortierten Auswahlen; VICE startet alle IDs. |
 | 3: Ton/Rauschen/Kombination/Folgen | Daten und Registersteuerung technisch geprüft; subjektive Klangbeurteilung offen. |
-| 4: Natürliches Ende | Alle 80 Effekte enden auf PAL/NTSC in CPU und VICE mit ausgeschalteten Quellen; zusätzlich alle 80 explizit gestoppt. |
-| 5: Loops | CPU prüft Übergänge und definierte Pause; VICE fünfzehn Loops über mehrere Zyklen und Stop. |
+| 4: Natürliches Ende | Alle 105 Effekte enden auf PAL/NTSC in CPU und VICE mit ausgeschalteten Quellen; zusätzlich alle 105 explizit gestoppt. |
+| 5: Loops | CPU prüft Übergänge und definierte Pause; VICE siebzehn Loops über mehrere Zyklen und Stop. |
 | 6: Bedienung während Sound | CPU prüft gehaltene Navigation, Stop, Hilfe und Auswahl; VICE Seitenwechsel während Loops und Q. Tatsächlich gehaltene Host-Tasten manuell noch offen. |
-| 7: Video/Speicher | Assemblergrenzen, CPU-Schreibbereiche und Videobits geprüft; Katalog/Hilfe visuell geprüft. Endadresse der Demo `$3557`, Ziel-RAM bis `$3FFF`. |
+| 7: Video/Speicher | Assemblergrenzen, CPU-Schreibbereiche und Videobits geprüft; Katalog/Hilfe visuell geprüft. Endadresse der Demo `$3F00`, Ziel-RAM bis `$3FFF` (255 Bytes frei). |
 | 8: Integration | Menüfreies Beispiel gebaut; VICE PAL/NTSC mit 16 KB: Spielebewegung während Sound, Ereignisse, Ende, Stop und BASIC-Rückkehr bestehen. |
-| 9: Emulator/Hören/Hardware | PAL/NTSC-Emulatorprüfungen bestehen. Alle 80 anhören/abstimmen und echte Hardware offen. |
-| 10: RAM/Tick-Laufzeit | Demo 9559 Bytes, Engine/Katalog 7174 Bytes, keine Engine-Zero-Page; höchster getesteter Tick 332 CPU-Zyklen. Kein Hardware-Wallclock- oder DMA-Zeitnachweis. |
+| 9: Emulator/Hören/Hardware | PAL/NTSC-Emulatorprüfungen bestehen. Alle 105 anhören/abstimmen und echte Hardware offen. |
+| 10: RAM/Tick-Laufzeit | Demo 12032 Bytes, Engine/Katalog 10203 Bytes, keine Engine-Zero-Page; höchster getesteter Tick 332 CPU-Zyklen. Kein Hardware-Wallclock- oder DMA-Zeitnachweis. |
 
 API, Messgrenzen und Integrationsbeispiel: [engine.md](engine.md).
 Effektgestaltung: [effects.md](effects.md). Speicher/KERNAL: [hardware.md](hardware.md).
@@ -53,7 +53,7 @@ Effektgestaltung: [effects.md](effects.md). Speicher/KERNAL: [hardware.md](hardw
 ## Noch erforderliche manuelle Abnahme
 
 1. Gehaltene Host-Tasten in VICE: SPACE/L nur einmal; Cursortasten wiederholen kontrolliert; RUN/STOP und Q funktionieren während Loops.
-2. Alle 80 Effekte auf PAL und NTSC anhören; Charakter, Lautstärke, Tonhöhe und Loopübergänge beurteilen und bei Bedarf abstimmen.
+2. Alle 105 Effekte auf PAL und NTSC anhören; Charakter, Lautstärke, Tonhöhe und Loopübergänge beurteilen und bei Bedarf abstimmen.
 3. `make run` und `make run-example` mit echter Audioausgabe von einem frischen Build bedienen.
 4. Falls verfügbar: echter C16 mit 16 KB, PAL/NTSC-Geräte bzw. passende Hardwaretests. Ohne Gerät keine Hardwareabnahme.
 5. Ursprüngliche System-Speicherreferenz abschließend gegenprüfen (offener Punkt in `docs/hardware.md`).
@@ -94,3 +94,27 @@ IDs 70–79 sind fünf gestaltete Flügelschlag-Loops in BEWEGUNG. Vier Seiten (
 IDs 75–79 ergänzen fünf einmalige Lebensverlust-Sounds unter JINGLE.
 Der Katalog umfasst jetzt 80 Effekte, vier Seiten (24/24/24/8) und weiterhin 15 Loops.
 Details und drei Flappy-Bird-Beispiele: [life-lost.md](life-lost.md).
+
+## Erweiterung: Mario und iOS
+
+IDs 80–89 ergänzen zehn stilisierte Mario-Vorbilder, IDs 90–99 zehn
+Vorbilder bekannter iOS-Spiele. Der Katalog umfasst jetzt 100 Effekte, fünf
+Seiten (24/24/24/24/4) und 16 Loops (neu: `jetpack-thrust`). `make test`,
+`make test-vice` und `make test-example-vice` bestehen auf PAL/NTSC mit
+16 KB. `make record-mario` und `make record-ios` erzeugen Vorschauen; nicht
+stummes PCM und natürliche Enden sind geprüft. Das Programm endet bei
+`$3EE8`, es bleiben 279 Bytes bis `$3FFF`. Vorbildähnlichkeit und subjektive
+Hörabnahme bleiben offen. Details: [mario-ios.md](mario-ios.md).
+
+## Erweiterung: Boulder Dash
+
+IDs 100–104 ergänzen fünf Boulder-Dash-Vorbilder nach der SID-Analyse von
+Martijn Mooij. Für Speicher wurde die Hilfeseite auf nullterminierte Zeilen
+umgestellt (589 Bytes gespart). Menü zeigt IDs ab 100 dreistellig; die
+Direkteingabe nimmt bis zu drei Ziffern an. Katalog: 105 Effekte, fünf Seiten
+(24/24/24/24/9), 17 Loops. `make test`, `make test-vice` (alle 105 IDs per
+Tastaturpuffer, auch dreistellig) und `make test-example-vice` bestehen auf
+PAL/NTSC mit 16 KB; Seite 5 und Hilfe per Bildschirmspeicher geprüft.
+`make record-boulder` erzeugt eine Vorschau mit nicht stummem PCM und
+natürlichen Enden. Programmende `$3F00`, 255 Bytes frei. Hörabnahme offen.
+Details: [boulder-dash.md](boulder-dash.md).

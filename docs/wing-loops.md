@@ -22,7 +22,7 @@ von 60 Video-Frames auf 50 logische Ticks.
 ID 70–74 eintippen, RETURN/SPACE, dann L für Wiederholung. Alternativ
 in der Kategorie BEWEGUNG auswählen und mit RETURN/SPACE starten.
 L abschalten: aktueller Durchlauf endet regulär. S/RUN-STOP stoppt sofort
-und verwirft Wiederholung. Die vier Seiten haben 24/24/24/3 Einträge.
+und verwirft Wiederholung. Aktuelle Seitenaufteilung: 24/24/24/24/9 Einträge.
 
 ## Im Spiel
 
@@ -45,7 +45,7 @@ verwendet werden. Auswahl der passendsten Variante bleibt eine Hörentscheidung.
 `make test` prüft Periodizität der Kontrollregister über mehrere Zyklen,
 Loop-Abschaltung und Stop für alle fünf Varianten auf PAL/NTSC. Die
 VICE-Prüfung startet alle 75 IDs und testet alle 15 gestalteten Loops
-mit 16 KB; Seitenwechsel und vierte Katalogseite werden mitgeprüft.
+mit 16 KB; Seitenwechsel und alle Katalogseiten werden mitgeprüft.
 
 `make record-flaps` erzeugt `build/wing-loops-pal.wav`: IDs 70–74 in
 aufsteigender Reihenfolge, jeweils mehrere Zyklen und eine Pause vor der

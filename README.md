@@ -1,6 +1,6 @@
 # C=16 Sound FX
 
-80 TED-Soundeffekte für den Commodore 16 mit 16 KB RAM.
+105 TED-Soundeffekte für den Commodore 16 mit 16 KB RAM.
 
 ACME, Make und VICE (`xplus4`) werden benötigt:
 
@@ -18,7 +18,7 @@ Das PRG liegt unter `build/c16-sound-fx.prg`. `make run` startet einen
 | Cursor hoch/runter | Effekt auswählen |
 | Cursor links/rechts | Seite wechseln |
 | RETURN / SPACE | Auswahl starten/neustarten |
-| 00–79, dann RETURN | Effekt direkt per ID starten |
+| 0–104, dann RETURN | Effekt direkt per ID starten |
 | L | Loop ein/aus |
 | S / RUN-STOP | Sound und Loop stoppen |
 | H | Hilfe öffnen/schließen |
@@ -31,4 +31,4 @@ In der Hilfe kehrt auch RETURN/SPACE zum Katalog zurück.
 Menüfreies Beispiel: `make run-example` (SPACE: Sprung, F: Schuss,
 C: Sammeln, L: Motorloop, S: Stop, Q: BASIC).
 
-[20 Spielvorbilder](docs/game-inspired.md) · [Engine-API](docs/engine.md) · [Prüfstand und offene Aufgaben](docs/status.md)
+[20 Spielvorbilder](docs/game-inspired.md) · [Mario und iOS](docs/mario-ios.md) · [Boulder Dash](docs/boulder-dash.md) · [Engine-API](docs/engine.md) · [Prüfstand und offene Aufgaben](docs/status.md)
