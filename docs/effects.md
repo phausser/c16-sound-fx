@@ -72,7 +72,7 @@ Loop-IDs sind 22, 23, 24, 27, 41, 43, 47 und 48. Leise bzw. stille Schritte inne
 Die klangliche Beurteilung und Lautstärkeabstimmung aller 50 Effekte sowie echte Hardware bleiben offen. Technisch unterschiedliche Streams garantieren keine subjektiv unterschiedlichen Klangcharaktere. Die aktuelle Gestaltung ist die erste Version für die Hörprüfung.
 ## Hörproben vorbereiten
 
-`make record-vice` wiederholt die PAL-/NTSC-Tests ohne Warp mit CoreAudio und erzeugt `build/vice-pal.wav` sowie `build/vice-ntsc.wav`. Die Aufnahmen enthalten zunächst IDs 00–49 in Reihenfolge, danach die acht Loopprüfungen mit Stop. Der Audiotreiber ist über `VICE_SOUND_DEVICE` überschreibbar. Gültige PCM-Dateiköpfe und vorhandene Audiosamples werden geprüft; dies ersetzt keine subjektive Hörprüfung.
+`make record-vice` wiederholt die PAL-/NTSC-Tests ohne Warp mit dem VICE-Standardaudiotreiber und erzeugt `build/vice-pal.wav` sowie `build/vice-ntsc.wav`. Die Aufnahmen enthalten zunächst IDs 00–49 in Reihenfolge, danach die acht Loopprüfungen mit Stop. Der Audiotreiber ist über `VICE_SOUND_DEVICE` überschreibbar. Gültige PCM-Dateiköpfe und vorhandene Audiosamples werden geprüft; dies ersetzt keine subjektive Hörprüfung.
 
 Die aktuelle VICE-Version lässt beim Monitor-Exit Platzhalter für die WAV-Längen zurück. Das Testskript finalisiert die Dateiköpfe anhand der tatsächlich aufgenommenen PCM-Samples, ohne Samples zu ändern. WAV-Dateien und Screenshots sind erzeugte Artefakte unter `build/` und werden nicht versioniert.
 

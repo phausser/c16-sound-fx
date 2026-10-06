@@ -10,8 +10,11 @@ make run
 ```
 
 Das PRG liegt unter `build/c16-sound-fx.prg`. `make run` startet einen
-16-KB-C16 mit PAL und Sound. Toolpfade sind überschreibbar:
+16-KB-C16 mit PAL und Sound. VICE wählt den Audiotreiber selbst. Toolpfade
+und Audiotreiber sind überschreibbar:
 `make run ACME=/pfad/acme VICE=/pfad/xplus4`.
+Bei Bedarf: `make run VICE_SOUND_DEVICE=pulse` (oder ein anderer von VICE
+unterstützter Treiber).
 
 | Taste | Aktion |
 |---|---|

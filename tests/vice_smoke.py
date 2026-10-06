@@ -15,7 +15,7 @@ symbols = dict((n, int(v, 16)) for n, v in re.findall(
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('vice', nargs='?', default='xplus4')
 parser.add_argument('--record', action='store_true')
-parser.add_argument('--sound-device', default='coreaudio')
+parser.add_argument('--sound-device')
 args = parser.parse_args()
 vice = args.vice
 record = args.record
@@ -106,10 +106,14 @@ for standard in ('pal', 'ntsc'):
     log.write_text('')
     audio_options = ['-soundwarpmode', '1', '-soundrecdev', 'wav',
                      '-soundrecarg', str(prefix.with_suffix('.wav'))] if record else []
+    sound_device_options = ['-sounddev', 'dummy']
+    if record:
+        sound_device_options = ['-sounddev', args.sound_device] if args.sound_device else []
     with prefix.with_suffix('.stdout.log').open('w') as output:
         result = subprocess.run([
             vice, '-default', '-console', '-model', 'c16', '-ramsize', '16',
-            f'-{standard}', '-sound', '-sounddev', args.sound_device if record else 'dummy',
+            f'-{standard}', '-sound',
+            *sound_device_options,
             '-soundoutput', '1', '-warp',
             *audio_options,
             '-autostartprgmode', '1', '-autostart', str(BUILD / 'c16-sound-fx.prg'),

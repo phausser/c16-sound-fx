@@ -9,7 +9,7 @@ import wave
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('vice', nargs='?', default='xplus4')
-parser.add_argument('sound_device', nargs='?', default='coreaudio')
+parser.add_argument('sound_device', nargs='?')
 parser.add_argument('--first', type=int, default=50)
 parser.add_argument('--last', type=int, default=69)
 parser.add_argument('--cycles', type=int, default=1)
@@ -69,7 +69,7 @@ with prefix.with_suffix('.stdout.log').open('w') as output:
     result = subprocess.run([
         args.vice, '-default', '-console',
         '-model', 'c16', '-ramsize', '16', '-pal', '-sound', '-soundoutput', '1',
-        '-sounddev', args.sound_device,
+        *(['-sounddev', args.sound_device] if args.sound_device else []),
         '-warp', '-soundwarpmode', '1', '-soundrecdev', 'wav',
         '-soundrecarg', str(prefix.with_suffix('.wav')),
         '-autostartprgmode', '1', '-autostart', str(build / 'c16-sound-fx.prg'),

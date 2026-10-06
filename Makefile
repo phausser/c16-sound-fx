@@ -1,7 +1,8 @@
 ACME ?= acme
 VICE ?= xplus4
 PYTHON ?= python3
-VICE_SOUND_DEVICE ?= coreaudio
+VICE_SOUND_DEVICE ?=
+VICE_SOUND_OPTION = $(if $(VICE_SOUND_DEVICE),-sounddev $(VICE_SOUND_DEVICE))
 VICE_STANDARD ?= pal
 PRG := build/c16-sound-fx.prg
 EXAMPLE := build/game-integration.prg
@@ -19,7 +20,7 @@ $(EXAMPLE): examples/game_integration.asm src/sfx_engine.asm src/sfx_data.asm sr
 	$(ACME) --format cbm --outfile $@ --symbollist build/example-symbols.txt --report build/example-listing.txt examples/game_integration.asm
 
 run-example: $(EXAMPLE)
-	$(VICE) -default -model c16 -ramsize 16 -$(VICE_STANDARD) -sound -sounddev $(VICE_SOUND_DEVICE) +warp -autostartprgmode 1 -autostart $(EXAMPLE)
+	$(VICE) -default -model c16 -ramsize 16 -$(VICE_STANDARD) -sound $(VICE_SOUND_OPTION) +warp -autostartprgmode 1 -autostart $(EXAMPLE)
 
 test-example-vice: $(EXAMPLE)
 	$(PYTHON) tests/vice_example.py $(VICE)
@@ -28,7 +29,7 @@ build:
 	mkdir -p $@
 
 run: $(PRG)
-	$(VICE) -default -model c16 -ramsize 16 -$(VICE_STANDARD) -sound -sounddev $(VICE_SOUND_DEVICE) +warp -autostartprgmode 1 -autostart $(PRG)
+	$(VICE) -default -model c16 -ramsize 16 -$(VICE_STANDARD) -sound $(VICE_SOUND_OPTION) +warp -autostartprgmode 1 -autostart $(PRG)
 
 test: $(PRG)
 	$(PYTHON) tests/test_engine.py
@@ -38,7 +39,7 @@ test-vice: $(PRG)
 	$(PYTHON) tests/vice_smoke.py $(VICE)
 
 record-vice: $(PRG)
-	$(PYTHON) tests/vice_smoke.py $(VICE) --record --sound-device $(VICE_SOUND_DEVICE)
+	$(PYTHON) tests/vice_smoke.py $(VICE) --record $(if $(VICE_SOUND_DEVICE),--sound-device $(VICE_SOUND_DEVICE))
 
 record-inspired: $(PRG)
 	$(PYTHON) tests/record_inspired.py $(VICE) $(VICE_SOUND_DEVICE)
